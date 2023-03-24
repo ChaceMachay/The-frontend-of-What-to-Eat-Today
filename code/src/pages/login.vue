@@ -1,10 +1,13 @@
 <script setup> 
 import { ref } from "vue"
+
+import loginform from "../pagelittles/loginform.vue";
+
 </script>
 
 <template>
-<el-container>
-            <el-header>
+<el-container h-screen>
+            <el-header p-0>
                 <div flex items-center h="full" bg-yellow-5 w-screen>
                     <div grow></div>
                     <el-avatar  src="../../public/pics/icon.jpg" />
@@ -12,9 +15,8 @@ import { ref } from "vue"
                     <div grow></div>
                 </div>
             </el-header>
-            <el-main>
+            <el-main flex style="align-items: center;">
+                <loginform style="margin: 0 auto;" />
             </el-main>
-            <el-footer>
-            </el-footer>
         </el-container>
 </template>

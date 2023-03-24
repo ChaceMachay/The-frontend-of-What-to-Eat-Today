@@ -1,10 +1,17 @@
 <script setup>
 import { ref } from "vue"
+
+import { userLogout } from "../api/user"
+import { getUserLoginInformation } from "../api/storage"
+
+
+const user = getUserLoginInformation()
+
 </script>
 
 <template>
     <el-container>
-        <el-header>
+        <el-header p-0>
             <div flex items-center h="full" bg-yellow-5 w-screen>
                 <div flex items-center grow ml-6>
                     <el-avatar src="../../public/pics/icon.jpg" />
@@ -14,10 +21,10 @@ import { ref } from "vue"
                     <template v-if="true">
                         <span>
                             <span c-white>
-                                XXX
+                                {{ user.userName }}
                             </span>
                         </span>
-                        <span c-white ml-6>退出登录</span>
+                        <span c-white ml-6 @click="userLogout">退出登录</span>
                     </template>
                     <span v-else c-white mr-10>
                         登录
