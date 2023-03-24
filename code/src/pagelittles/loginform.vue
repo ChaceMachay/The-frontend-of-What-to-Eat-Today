@@ -27,10 +27,9 @@ const userLoginEvent = async () => {
         return
     }
     try {
-        const { refreshToken, accessToken, userName } = await userLogin(userLoginFormInput.value)
+        const { accessToken, userName } = await userLogin(userLoginFormInput.value)
         user.value =
         {
-            refreshToken,
             accessToken,
             userName,
             userLoginStatus: 1,

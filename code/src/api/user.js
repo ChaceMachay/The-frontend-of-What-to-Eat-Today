@@ -24,7 +24,6 @@ export const userLogin = async ({ userAccount, userPassword }) => {
     return {
         "userName": "test userName",
         "accessToken": "test accessToken",
-        "refreshToken": "test refreshToken",
     }
 }
 
@@ -33,7 +32,6 @@ export const userLogin = async ({ userAccount, userPassword }) => {
 export const userLogout = () => {
     user.value.userLoginStatus = 0 
     user.value.accessToken = null
-    user.value.refreshToken
     alert("您已退出登录")
 } 
 
