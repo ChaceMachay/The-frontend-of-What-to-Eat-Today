@@ -7,7 +7,7 @@ import { useStorage } from "@vueuse/core"
 export const getUserLoginInformation = () => {
     return useStorage('user', 
         {
-            userLoginStatus: 0, accessToken: "null", refreshToken: "null", userName: "null"
+            userLoginStatus: 0, accessToken: "null", userName: "null",
         }, 
         localStorage, 
         {
