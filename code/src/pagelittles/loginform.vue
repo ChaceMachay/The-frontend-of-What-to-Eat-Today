@@ -7,6 +7,10 @@ import '@unocss/reset/tailwind.css'
 
 const user = getUserLoginInformation()
 const formEl = ref(null)
+const rules = ref({
+    userAccount: [{ required: true, message: '用户名不可为空' }],
+    userPassword: [{ required: true, message: '密码不可为空' }]
+})
 const userLoginFormInput = ref(
     {
         userAccount: "",
@@ -14,13 +18,11 @@ const userLoginFormInput = ref(
     }
 )
 
-const rules = ref({
-    userAccount: [{ required: true, rangelength: [0, 15], message: '用户名不可为空' }],
-    userPassword: [{ required: true, rangelength: [0, 15], message: '密码不可为空' }]
-})
+
 
 const userLoginEvent = async () => {
 
+    // 表单规则验证
     if (!(await formEl.value.validate(() => { }))) {
         alert('用户名与密码均不可为空')
         return
@@ -35,7 +37,7 @@ const userLoginEvent = async () => {
         }
     }
     catch {
-        alert("登录失败，请检查网络环境状态及账号密码是否输入正确")
+        alert("登录失败，请检查网络环境状态及账号密码是否输入正确。")
     }
 }
 </script>
