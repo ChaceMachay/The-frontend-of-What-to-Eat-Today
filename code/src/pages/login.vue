@@ -1,7 +1,7 @@
 <script setup> 
 import { ref } from "vue"
 
-import loginform from "../pagelittles/loginform.vue";
+import LoginForm from "../childPages/LoginForm.vue"
 
 </script>
 
@@ -16,7 +16,7 @@ import loginform from "../pagelittles/loginform.vue";
                 </div>
             </el-header>
             <el-main flex style="align-items: center;">
-                <loginform style="margin: 0 auto;" />
+                <LoginForm style="margin: 0 auto;" />
             </el-main>
         </el-container>
 </template>

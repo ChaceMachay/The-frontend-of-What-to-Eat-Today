@@ -11,19 +11,18 @@ export const http = axios.create(
 http.interceptors.request.use(req => {
     const token = localStorage.getItem('accessToken');
     if (token) {
-        req.headers.set('Authorization', `Bearer ${token}`);
+        req.headers.set('Authorization', `Bearer ${token}`)
     }
-    return req;
-});
+    return req
+})
 
 http.interceptors.response.use(
     res => res,
     err => {
         if (err.response.status === 401) {
-            alert('登录失效，请重新登录');
-            //router.push('/login');
+            alert('登录失效，请重新登录')
         }
-        return Promise.reject(err);
+        return Promise.reject(err)
     }
-);
+)
 

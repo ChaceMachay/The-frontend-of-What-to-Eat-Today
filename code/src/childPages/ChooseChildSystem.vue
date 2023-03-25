@@ -10,12 +10,12 @@ const childSystemItemList = ref(
     [
         {
             "item": "餐厅管理",
-            "icon": "../../public/pics/icon.jpg",
+            "icon": "/pics/icon.jpg",
             "path": "/canteenManage",
         },
         {
             "item": "菜品管理",
-            "icon": "../../public/pics/icon.jpg",
+            "icon": "/pics/icon.jpg",
             "path": "/dishManage",
         },
     ]

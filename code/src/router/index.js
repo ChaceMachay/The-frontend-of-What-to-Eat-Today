@@ -1,22 +1,22 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
-import choosechildsystem from "../pagelittles/choosechildsystem.vue"
-import canteenmanage from "../pagelittles/canteenmanage.vue"
-import dishmanage from "../pagelittles/dishmanage.vue"
+import ChooseChildSystem from "../childPages/ChooseChildSystem.vue"
+import CanteenManage from "../childPages/CanteenManage.vue"
+import DishManage from "../childPages/DishManage.vue"
 
 
 const routes = [
     {
         path: "/",
-        component: choosechildsystem,
+        component: ChooseChildSystem,
     },
     {
         path: "/canteenManage",
-        component: canteenmanage,
+        component: CanteenManage,
     },
     {
         path: "/dishManage",
-        component: dishmanage,
+        component: DishManage,
     },
     {
         path: '/:pathMatch(.*)*',
