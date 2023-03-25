@@ -3,6 +3,8 @@ import { ref } from "vue"
 import { http } from "../utils/http"
 
 
+// page为当前页码，qty为每页数量
+
 export const getCanteenInformationByPage = async (page, qty) => {
     // return await http.get(
     //     './pageCanteen',
