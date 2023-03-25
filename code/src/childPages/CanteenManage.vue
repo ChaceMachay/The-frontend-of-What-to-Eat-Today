@@ -52,10 +52,10 @@
 
     <!-- 这个表格还大有问题，要调整一下 -->
 
-    <el-container>
-        <el-header flex flex-col style="justify-content: space-between;">
+    <el-container class="div">
+        <el-header flex flex-row style="justify-content: space-between;" item-center>
             <div >餐厅管理</div>
-            <div>
+            <div flex flex-row>
                 <el-input v-model="userSearchInput"></el-input>
                 <el-button>搜索</el-button>
                 <el-button>筛选</el-button>
@@ -81,3 +81,11 @@
         </el-footer>
     </el-container>
 </template>
+
+
+<style scoped>
+.div:deep(.el-input) {
+    height: 55%;
+    margin-right: 5%;
+}
+</style>

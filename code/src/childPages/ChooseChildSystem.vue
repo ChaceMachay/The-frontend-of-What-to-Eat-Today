@@ -25,7 +25,7 @@ const childSystemItemList = ref(
 
 <template>
     <div flex flex-row>
-        <div v-for="item in childSystemItemList" bg-yellow-5 wa ha 
+        <div v-for="item in childSystemItemList" style="background: rgb(251,189,23)" wa ha 
                 flex flex-row items-center m-8 pa-8 rd-6
                 @click="router.push(item.path)">
 

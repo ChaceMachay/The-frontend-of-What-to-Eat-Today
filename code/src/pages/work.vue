@@ -16,7 +16,7 @@ router.push('/')
 <template>
     <el-container>
         <el-header p-0>
-            <div flex items-center h="full" bg-yellow-5 w-screen>
+            <div flex items-center h="full" style="background: rgb(251,189,23)" w-screen>
                 <div flex items-center grow ml-6>
                     <el-avatar src="/pics/icon.jpg" />
                     <span ml-2 c-white>"今天吃什么"数据管理系统</span>
