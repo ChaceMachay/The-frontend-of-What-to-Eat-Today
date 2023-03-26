@@ -52,20 +52,30 @@ const initialInput = () => {
 }
 
 const userPrimaryCanteenEdit = () => {
-    ElMessageBox.confirm("餐厅信息修改成功！", "修改成功！", {
+    ElMessageBox.confirm("是否确认修改餐厅信息？", "修改确认", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
     })
-    .catch(()=>{
-        return
-    })
-    const loading = ElLoading.service({
-        fullscreen: true,
-        text: "正在提交修改数据",
-    });
-    //pushEditData(userCanteenEditInput.value)
-    loading.close()
+        .catch(() => {
+            return
+        })
+        .then(
+            () => {
+                //pushEditData(userCanteenEditInput.value)
+                const loading = ElLoading.service({
+                    fullscreen: true,
+                    text: "正在提交修改数据",
+                })
+                loading.close()
+
+                ElMessageBox.confirm("修改餐厅信息成功！", "修改成功", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning",
+                })
+            }
+        )
     console.log(userCanteenEditInput.value)
     windowsMessage.value = null
     editWindowStatus.value = false
@@ -92,7 +102,6 @@ initialInput()
 </script>
 
 <template>
-
     <!-- 修改信息的层数和窗口数要做验证，包括不能为零，和单次而言input的数不能超过原值+limit值 -->
 
 
@@ -121,7 +130,8 @@ initialInput()
 
                     <div m-5 flex flex-col style="width: 100%;" v-for="i in range(userCanteenEditInput.level_num)">
                         <div grow><span>第{{ convertToChinaNum(i + 1) }}层
-                                窗口数：<el-input v-model.number="userCanteenEditInput.information[i].windows_num" /></span></div>
+                                窗口数：<el-input v-model.number="userCanteenEditInput.information[i].windows_num" /></span>
+                        </div>
                         <div flex flex-col
                             v-for="j in range((userCanteenEditInput.information[i].windows_num + (userCanteenEditInput.information[i].windows_num) % 2) / 2)">
                             <div flex flex-row>
@@ -129,7 +139,7 @@ initialInput()
                                     <span>{{ j * 2 + 1 }}号窗口名称：<el-input
                                             v-model="userCanteenEditInput.information[i].information[j * 2]" /></span>
                                 </div>
-                                <div grow mt-5 mb-5 v-if="((j+1) < ((userCanteenEditInput.information[i].windows_num + userCanteenEditInput.information[i].windows_num % 2) / 2))
+                                <div grow mt-5 mb-5 v-if="((j + 1) < ((userCanteenEditInput.information[i].windows_num + userCanteenEditInput.information[i].windows_num % 2) / 2))
                                     || !(userCanteenEditInput.information[i].windows_num % 2)">
                                     <span>{{ j * 2 + 2 }}号窗口名称：<el-input
                                             v-model="userCanteenEditInput.information[i].information[j * 2 + 1]" /></span>

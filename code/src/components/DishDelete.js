@@ -8,6 +8,11 @@ export const deleteCanteen = (item) => {
         .then(() => {
             //pushDeleteDish(dish_id)
             console.log("删除菜品：",dish_id)
+            ElMessageBox.confirm("删除成功！", "删除成功", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning",
+            })
         })
         .catch(() => {
             return
