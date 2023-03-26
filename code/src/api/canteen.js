@@ -21,7 +21,7 @@ export const getCanteenInformationByPage = (page, qty) => {
             {
                 "canteen_name": "齐园",
                 "canteen_id": "11",
-                "level_num": 5,
+                "level_num": 1,
                 "campus": {
                     "campus_name":"中心校区",
                     "campus_id": "1",

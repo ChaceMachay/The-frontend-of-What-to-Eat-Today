@@ -15,8 +15,8 @@ const userCanteenEditInput = ref({
     canteen_name: "",
     level_num: 1,
     information: [{
-        windows_num: 1,
-        information: ["",],
+        windows_num: 0,
+        information: [null,],
     }]
 })
 
@@ -25,7 +25,6 @@ const initialInput = () => {
         campus_id: windowsMessage.value.campus.campus_id,
         canteen_name: windowsMessage.value.canteen_name,
         level_num: windowsMessage.value.level_num,
-        information: []
     }
 
     userCanteenEditInput.value.information = windowsMessage.value.information.map(i => {
@@ -37,7 +36,9 @@ const initialInput = () => {
 }
 
 initialInput()
-//console.log( userCanteenEditInput.value.information[range(userCanteenEditInput.value.level_num)[0]].windows_num)
+
+const temp = ref(userCanteenEditInput.value.information[range(userCanteenEditInput.value.level_num)[0]].windows_num)
+console.log( temp.value )
 </script>
 
 <template>

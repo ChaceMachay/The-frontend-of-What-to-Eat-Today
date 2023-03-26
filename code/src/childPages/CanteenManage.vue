@@ -23,7 +23,7 @@ canteenInformation.value = getCanteenInformationByPage(nowPage.value, qty.value)
 
 const nextPage = async () => {
     try {
-        canteenInformation.value = await getCanteenInformationByPage(nowPage.value + 1, qty.value)
+        canteenInformation.value = getCanteenInformationByPage(nowPage.value + 1, qty.value)
     }
     catch {
         alert("已经是最后一页了")
@@ -34,7 +34,7 @@ const nextPage = async () => {
 
 const lastPage = async () => {
     try {
-        canteenInformation.value = await getCanteenInformationByPage(nowPage.value - 1, qty.value)
+        canteenInformation.value = getCanteenInformationByPage(nowPage.value - 1, qty.value)
     }
     catch {
         alert("已经是第一页了")
