@@ -1,3 +1,5 @@
+import { windowsMessage } from "../status/data" 
+
 export function convertToChinaNum(num) {
     var arr1 = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
     var arr2 = ['', '十', '百', '千', '万', '十', '百', '千', '亿', '十', '百', '千','万', '十', '百', '千','亿'];//可继续追加更高位转换值
@@ -32,3 +34,8 @@ export function convertToChinaNum(num) {
         }
     return result
 }
+
+// export const closeWindows = (done)=>{
+//     windowsMessage.value = null
+//     return done
+// }
