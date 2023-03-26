@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue"
+import { ref } from "vue"
 import { range } from 'lodash'
 
 import { windowsMessage, editWindowStatus, canteenWindowsLimit, canteenLevelLimit } from "../status/data.js"
@@ -52,17 +52,20 @@ const initialInput = () => {
 }
 
 const userPrimaryCanteenEdit = () => {
+    ElMessageBox.confirm("餐厅信息修改成功！", "修改成功！", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+    })
+    .catch(()=>{
+        return
+    })
     const loading = ElLoading.service({
         fullscreen: true,
         text: "正在提交修改数据",
     });
     //pushEditData(userCanteenEditInput.value)
     loading.close()
-    ElMessageBox.confirm("餐厅信息修改成功！", "修改成功！", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-    })
     console.log(userCanteenEditInput.value)
     windowsMessage.value = null
     editWindowStatus.value = false

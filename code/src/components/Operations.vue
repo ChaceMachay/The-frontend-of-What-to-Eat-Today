@@ -1,11 +1,19 @@
 <script setup>
     import { ref, defineProps } from 'vue'
 
-    import { windowsMessage, showWindowStatus, editWindowStatus, deleteWindowStatus, windowStatus } from '../status/data'
+    import { windowsMessage, showWindowStatus, editWindowStatus,windowStatus } from '../status/data'
 
-    const props = defineProps(['item'])
+    import { deleteCanteen } from './CanteenDelete'
+    //import { deleteDish } from './DishDelete'
+
+
+
+    const props = defineProps(['item','type'])
 
     console.log("operations was loaded, and it message is: ", props.item)
+
+
+    //  底下这一溜要根据type是canteen还是dish做个if-else
 
     const showItem = () => {
         if (windowStatus.value){
@@ -26,12 +34,20 @@
     }
 
     const deleteItem = () => {
+        console.log("deleteItem was called, and it message is: ", props.type)
         if (windowStatus.value){
             return
         }
-
-        windowsMessage.value = props.item
-        deleteWindowStatus.value = true
+        if (props.type === "canteen"){
+            deleteCanteen(props.item)
+        }
+        //else if(props.type === "dish"){
+            //deleteDish(props.item)
+        //}
+        else {
+            console.log("undefined type props.")
+            alert("系统版本过低，请更新系统后重试。")
+        }
     }
 </script>
 

@@ -76,7 +76,7 @@ const lastPage = async () => {
                 </el-table-column>
                 <el-table-column label="管理" grow="1">
                     <template #default="scope">
-                        <Operations :item="scope.row" />
+                        <Operations :item="scope.row" type="canteen"  />
                     </template>
                 </el-table-column>
             </el-table>
