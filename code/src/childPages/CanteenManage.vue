@@ -50,7 +50,8 @@ const lastPage = async () => {
     <CanteenEdit v-if="editWindowStatus" />
 
 
-    <!-- 这个表格还大有问题，要调整一下 -->
+    <!-- 表格的上下页检验和样式没做。 -->
+    
 
     <el-container class="div">
         <el-header flex flex-row style="justify-content: space-between;" item-center>

@@ -92,6 +92,10 @@ initialInput()
 </script>
 
 <template>
+
+    <!-- 修改信息的层数和窗口数要做验证，包括不能为零，和单次而言input的数不能超过原值+limit值 -->
+
+
     <div class="dialog" v-if="editWindowStatus">
         <el-dialog v-model="editWindowStatus" :show-close="false" align-center :close-on-click-modal="false">
             <template #header>
