@@ -20,16 +20,16 @@ export const getCanteenInformationByPage = (page, qty) => {
     return [
             {
                 "canteen_name": "齐园",
-                "canteen_id": "123123",
+                "canteen_id": "11",
                 "level_num": 5,
                 "campus": {
                     "campus_name":"中心校区",
-                    "campus_id": "123123",
+                    "campus_id": "1",
                 },
                 "information":
                     [
                         {
-                            "level_id": "5202",
+                            "level_id": "5201",
                             "windows_num": 2,
                             "information": 
                             [
@@ -56,27 +56,27 @@ export const getCampus =  () => {
     return [
             {
                 "campus_name": "中心校区",
-                "campus_id": "123123",
+                "campus_id": "1",
             },
             {
                 "campus_name": "兴隆山校区",
-                "campus_id": "123123",
+                "campus_id": "2",
             },
             {
                 "campus_name": "软件园校区",
-                "campus_id": "123123",
+                "campus_id": "3",
             },
             {
                 "campus_name": "洪家楼校区",
-                "campus_id": "123123",
+                "campus_id": "4",
             },
             {
                 "campus_name": "千佛山校区",
-                "campus_id": "123123",
+                "campus_id": "5",
             }, 
             {
                 "campus_name": "趵突泉校区",
-                "campus_id": "123123",
+                "campus_id": "6",
             },
         ]
 }

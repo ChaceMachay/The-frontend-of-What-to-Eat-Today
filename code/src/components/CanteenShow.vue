@@ -5,12 +5,12 @@ import { range } from 'lodash'
 import { windowsMessage, showWindowStatus } from "../status/data.js"
 import { convertToChinaNum } from "../api/etc"
 
-console.log("canteen show was loaded, and it message is: ")
+console.log("canteen show was loaded, and it message is: ",windowsMessage.value)
 
 </script>
 
 <template>
-    <div class="dialog">
+    <div class="dialog" v-if="showWindowStatus">
         <el-dialog v-model="showWindowStatus" :show-close="false" align-center>
             <template #header>
                 <div flex items-center h="full" bg-yellow-5><span c-white m-3>查看餐厅详情</span></div>

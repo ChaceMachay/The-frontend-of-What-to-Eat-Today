@@ -11,9 +11,8 @@
         if (windowStatus.value){
             return
         }
-
-        showWindowStatus.value = true
         windowsMessage.value = props.item
+        showWindowStatus.value = true
         console.log("showItem was called, and it message is: ", windowsMessage.value)
     }
 
@@ -21,9 +20,9 @@
         if (windowStatus.value){
             return
         }
-
-        editWindowStatus.value = true
         windowsMessage.value = props.item
+        editWindowStatus.value = true
+        console.log("editItem was called, and it message is: ", windowsMessage.value)
     }
 
     const deleteItem = () => {
@@ -31,8 +30,8 @@
             return
         }
 
-        deleteWindowStatus.value = true
         windowsMessage.value = props.item
+        deleteWindowStatus.value = true
     }
 </script>
 

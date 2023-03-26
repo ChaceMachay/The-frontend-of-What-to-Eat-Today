@@ -1,60 +1,60 @@
 <script setup>
-    import { ref, computed } from "vue"
-    import { useRouter } from "vue-router"
-    import { getCanteenInformationByPage } from "../api/canteen"
+import { ref, computed } from "vue"
+import { useRouter } from "vue-router"
+import { getCanteenInformationByPage } from "../api/canteen"
+import { showWindowStatus,editWindowStatus } from "../status/data" 
 
-    import CanteenShow from "../components/CanteenShow.vue"
-    //import CanteenEdit from "../components/CanteenEdit.vue"
-    import Operations from "../components/Operations.vue"
-    
-    const router = useRouter()
-    const nowPage = ref(1)
-    const itemHeight = ref(20)
-    const userSearchInput = ref("")
-    const userFilterInput = ref([])
-    const qty = computed(() =>{
-        return document.body.clientHeight / 100 * 60 / itemHeight.value
-    })
-    const canteenInformation = ref([])
+import CanteenShow from "../components/CanteenShow.vue"
+import CanteenEdit from "../components/CanteenEdit.vue"
+import Operations from "../components/Operations.vue"
 
-    canteenInformation.value = getCanteenInformationByPage(nowPage.value, qty.value)
+const router = useRouter()
+const nowPage = ref(1)
+const itemHeight = ref(20)
+const userSearchInput = ref("")
+const userFilterInput = ref([])
+const qty = computed(() => {
+    return document.body.clientHeight / 100 * 60 / itemHeight.value
+})
+const canteenInformation = ref([])
+
+canteenInformation.value = getCanteenInformationByPage(nowPage.value, qty.value)
 
 
-    const nextPage = async () => {
-        try{
-            canteenInformation.value = await getCanteenInformationByPage(nowPage.value + 1, qty.value)
-        }
-        catch{
-            alert("已经是最后一页了")
-            return
-        }
-        nowPage.value += 1
+const nextPage = async () => {
+    try {
+        canteenInformation.value = await getCanteenInformationByPage(nowPage.value + 1, qty.value)
     }
-
-    const lastPage = async () => {
-        try{
-            canteenInformation.value = await getCanteenInformationByPage(nowPage.value - 1, qty.value)
-        }
-        catch{
-            alert("已经是第一页了")
-            return
-        }
-        nowPage.value -= 1
+    catch {
+        alert("已经是最后一页了")
+        return
     }
+    nowPage.value += 1
+}
+
+const lastPage = async () => {
+    try {
+        canteenInformation.value = await getCanteenInformationByPage(nowPage.value - 1, qty.value)
+    }
+    catch {
+        alert("已经是第一页了")
+        return
+    }
+    nowPage.value -= 1
+}
 
 </script>
 
 <template>
+    <CanteenShow v-if="showWindowStatus"  />
+    <CanteenEdit v-if="editWindowStatus" />
 
-    <CanteenShow />
-    <!-- <CanteenEdit /> -->
-    
 
     <!-- 这个表格还大有问题，要调整一下 -->
 
     <el-container class="div">
         <el-header flex flex-row style="justify-content: space-between;" item-center>
-            <div >餐厅管理</div>
+            <div>餐厅管理</div>
             <div flex flex-row>
                 <el-input v-model="userSearchInput"></el-input>
                 <el-button>搜索</el-button>
@@ -63,17 +63,23 @@
             </div>
         </el-header>
         <el-main>
-        <el-form>
-            <el-form-item>
-                <el-table :data="canteenInformation">
-                    <el-table-column label="管理">
-                        <template #default="scope">
-                            <Operations :item="scope.row" />
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </el-form-item>
-        </el-form>
+            <el-table :data="canteenInformation">
+                <el-table-column label="校区" grow="1">
+                    <template #default="scope">
+                        {{scope.row.campus.campus_name}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="名称" grow="5">
+                    <template #default="scope">
+                        {{scope.row.canteen_name}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="管理" grow="1">
+                    <template #default="scope">
+                        <Operations :item="scope.row" />
+                    </template>
+                </el-table-column>
+            </el-table>
         </el-main>
         <el-footer>
             <el-button @click="lastPage">上一页</el-button>
