@@ -2,16 +2,16 @@
 import { ref } from "vue"
 import { range } from 'lodash'
 
-import { windowsMessage, showWindowStatus } from "../status/data.js"
-import { convertToChinaNum } from "../api/etc"
+import { windowsMessage, showWindowStatus, canteenWindowStatus } from "../status/data.js"
+import { convertToChinaNum, closeWindows } from "../api/etc"
 
 console.log("canteen show was loaded, and it message is: ",windowsMessage.value)
 
 </script>
 
 <template>
-    <div class="dialog" v-if="showWindowStatus">
-        <el-dialog v-model="showWindowStatus" :show-close="false" align-center>
+    <div class="dialog" v-if="canteenWindowStatus">
+        <el-dialog v-model="showWindowStatus" :show-close="false" align-center :before-close="closeWindows">
             <template #header>
                 <div flex items-center h="full" bg-yellow-5><span c-white m-3>查看餐厅详情</span></div>
             </template>

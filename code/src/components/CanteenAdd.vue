@@ -2,17 +2,19 @@
 import { ref } from "vue"
 import { range } from 'lodash'
 
-import { windowsMessage, editWindowStatus, canteenWindowsLimit, canteenLevelLimit, canteenWindowStatus } from "../status/data.js"
+import { addWindowStatus, canteenWindowsLimit, canteenLevelLimit, canteenWindowStatus } from "../status/data.js"
 import { getCampus } from "../api/canteen"
 import { closeWindows, convertToChinaNum } from "../api/etc"
 
-console.log("canteen edit was loaded, and it message is: ", windowsMessage.value)
+console.log("canteen add was loaded.")
+
+//   添加基本上就是修改的操作，只是初始值为0. 只有与后端交互的api名字不同，叫pushAddData(); 状态为 addWindowStatus ， 其他一致。
 
 const options = getCampus()
 
 const userCanteenEditInput = ref({
-    campus_id: "",
-    canteen_name: "",
+    campus_id: "1",
+    canteen_name: "齐园",
     level_num: 1,
     information: [{
         windows_num: 1,
@@ -21,22 +23,6 @@ const userCanteenEditInput = ref({
 })
 
 const initialInput = () => {
-    userCanteenEditInput.value = {
-        campus_id: windowsMessage.value.campus.campus_id,
-        canteen_name: windowsMessage.value.canteen_name,
-        level_num: windowsMessage.value.level_num,
-    }
-
-    userCanteenEditInput.value.information = windowsMessage.value.information.map(i => {
-        let temp = {
-            windows_num: i.windows_num,
-            information: i.information.map(j => j.windows_name)
-        }
-        for (let k in range(canteenWindowsLimit)) {
-            temp.information.push("")
-        }
-        return temp
-    })
     let template = {
         windows_num: 1,
         information: [],
@@ -44,6 +30,7 @@ const initialInput = () => {
     for (let l in range(canteenWindowsLimit)) {
         template.information.push("")
     }
+    console.log("template: ", userCanteenEditInput.value)
     for (let m in range(canteenLevelLimit)) {
         userCanteenEditInput.value.information.push(
             JSON.parse(JSON.stringify(template))
@@ -52,7 +39,7 @@ const initialInput = () => {
 }
 
 const userPrimaryCanteenEdit = () => {
-    ElMessageBox.confirm("是否确认修改餐厅信息？", "修改确认", {
+    ElMessageBox.confirm("是否确认添加餐厅信息？", "添加确认", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -61,20 +48,19 @@ const userPrimaryCanteenEdit = () => {
             (res) => {
                 const loading = ElLoading.service({
                     fullscreen: true,
-                    text: "正在提交修改数据",
+                    text: "正在提交添加数据",
                 })
-                //pushEditData(userCanteenEditInput.value)
+                //pushAddData(userCanteenEditInput.value)
                 loading.close()
                 console.log("close then: ", res)
-                ElMessageBox.confirm("修改餐厅信息成功！", "修改成功", {
+                ElMessageBox.confirm("添加餐厅信息成功！", "添加成功", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
                     type: "warning",
                 })
 
                 console.log(userCanteenEditInput.value)
-                windowsMessage.value = null
-                editWindowStatus.value = false
+                addWindowStatus.value = false
             }
         )
         .catch((err) => {
@@ -92,8 +78,7 @@ const userCloseCanteenEditWindow = () => {
         type: "warning",
     })
         .then(() => {
-            windowsMessage.value = null
-            editWindowStatus.value = false
+            addWindowStatus.value = false
         })
         .catch(() => {
             return
@@ -108,10 +93,10 @@ initialInput()
 
 
     <div class="dialog" v-if="canteenWindowStatus">
-        <el-dialog v-model="editWindowStatus" :show-close="false" align-center :close-on-click-modal="false"
+        <el-dialog v-model="addWindowStatus" :show-close="false" align-center :close-on-click-modal="false"
             :before-close="closeWindows">
             <template #header>
-                <div flex items-center h="full" bg-yellow-5><span c-white m-3>修改餐厅信息</span></div>
+                <div flex items-center h="full" bg-yellow-5><span c-white m-3>添加餐厅信息</span></div>
             </template>
             <el-container>
                 <el-main style="overflow-x: hidden;overflow-y:auto;">
@@ -125,7 +110,7 @@ initialInput()
                         </div>
                         <div grow flex flex-row><span>名称：</span><el-input v-model="userCanteenEditInput.canteen_name" /></div>
                     </div>
-                    <div m-5 flex flex-row style="width: 100%;">
+                    <div m-5 flex style="width: 100%;" flex-row>
                         <div grow flex flex-row><span>层数：</span><el-input v-model.number="userCanteenEditInput.level_num" /></div>
                         <div grow></div>
                     </div>
@@ -138,11 +123,11 @@ initialInput()
                         <div flex flex-col
                             v-for="j in range((userCanteenEditInput.information[i].windows_num + (userCanteenEditInput.information[i].windows_num) % 2) / 2)">
                             <div flex flex-row>
-                                <div grow mt-5 mb-5 flex flex-row >
+                                <div grow mt-5 mb-5 flex flex-row>
                                     <span>{{ j * 2 + 1 }}号窗口名称：<el-input
                                             v-model="userCanteenEditInput.information[i].information[j * 2]" /></span>
                                 </div>
-                                <div grow flex flex-row mt-5 mb-5 v-if="((j + 1) < ((userCanteenEditInput.information[i].windows_num + userCanteenEditInput.information[i].windows_num % 2) / 2))
+                                <div grow mt-5 mb-5 flex flex-row v-if="((j + 1) < ((userCanteenEditInput.information[i].windows_num + userCanteenEditInput.information[i].windows_num % 2) / 2))
                                     || !(userCanteenEditInput.information[i].windows_num % 2)">
                                     <span>{{ j * 2 + 2 }}号窗口名称：<el-input
                                             v-model="userCanteenEditInput.information[i].information[j * 2 + 1]" /></span>
@@ -156,7 +141,7 @@ initialInput()
                             <div grow>
                             </div>
                             <div grow>
-                                <el-button @click="userPrimaryCanteenEdit">修改</el-button>
+                                <el-button @click="userPrimaryCanteenEdit">添加</el-button>
                                 <el-button @click="userCloseCanteenEditWindow">返回</el-button>
                             </div>
                             <div grow></div>

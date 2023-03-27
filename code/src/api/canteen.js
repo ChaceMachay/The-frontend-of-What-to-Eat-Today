@@ -80,3 +80,45 @@ export const getCampus =  () => {
             },
         ]
 }
+
+export const getCanteenInformationBySearch =  (sreachWord) => {
+    // return await http.get(
+    //     './searchCanteen',
+    //     {
+    //         params: 
+    //             {
+    //                 search: sreachWord,
+    //             },
+    //     },
+    // )
+    console.log("搜索餐厅：",sreachWord)
+    return [
+            {
+                "canteen_name": "齐园",
+                "canteen_id": "11",
+                "level_num": 1,
+                "campus": {
+                    "campus_name":"中心校区",
+                    "campus_id": "1",
+                },
+                "information":
+                    [
+                        {
+                            "level_id": "5201",
+                            "windows_num": 2,
+                            "information": 
+                            [
+                                {
+                                    "windows_name":'麻辣香锅窗口',
+                                    "windows_id": "520201",
+                                }, 
+                                {
+                                    "windows_name":'螺蛳粉窗口',
+                                    "windows_id": "520202",
+                                },
+                            ],
+                        },
+                    ],
+            },
+        ]
+}

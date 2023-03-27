@@ -1,4 +1,4 @@
-import { windowsMessage } from "../status/data" 
+import { windowsMessage, canteenWindowStatus, dishWindowStatus } from "../status/data" 
 
 export function convertToChinaNum(num) {
     var arr1 = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
@@ -35,7 +35,11 @@ export function convertToChinaNum(num) {
     return result
 }
 
-// export const closeWindows = (done)=>{
-//     windowsMessage.value = null
-//     return done
-// }
+export const closeWindows = (done)=>{
+    
+    canteenWindowStatus.value = false
+    dishWindowStatus.value = false
+
+    windowsMessage.value = null
+    return done
+}

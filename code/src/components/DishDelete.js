@@ -1,4 +1,4 @@
-export const deleteCanteen = (item) => {
+export const deleteDish = (item) => {
     const dish_id = item.dish_id
     ElMessageBox.confirm("是否确认删除该菜品信息？", "删除确认", {
         confirmButtonText: "确定",
