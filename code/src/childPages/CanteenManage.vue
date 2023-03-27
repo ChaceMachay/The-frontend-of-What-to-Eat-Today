@@ -51,6 +51,7 @@ const search = async () => {
     })
     try {
         canteenInformation.value = getCanteenInformationBySearch(userSearchInput.value, 1, qty.value)
+        userSearchInput.value = null
     }
     catch {
         loading.close()

@@ -50,6 +50,7 @@ const search = async () => {
                 })
     try {
         dishInformation.value = getDishInformationBySearch(userSearchInput.value, 1 ,qty.value)
+        userSearchInput.value = null
     }
     catch {
         loading.close()
