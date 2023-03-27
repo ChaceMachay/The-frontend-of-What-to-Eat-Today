@@ -3,7 +3,7 @@ import { ref } from "vue"
 import { range } from 'lodash'
 
 import { windowsMessage, showWindowStatus, dishWindowStatus } from "../status/data.js"
-import { convertToChinaNum, closeWindows } from "../api/etc"
+import { convertToChinaNum } from "../api/etc"
 
 console.log("canteen show was loaded, and it message is: ",windowsMessage.value)
 
@@ -11,7 +11,7 @@ console.log("canteen show was loaded, and it message is: ",windowsMessage.value)
 
 <template>
     <div class="dialog" v-if="dishWindowStatus">
-        <el-dialog v-model="showWindowStatus" :show-close="false" align-center :before-close="closeWindows">
+        <el-dialog v-model="showWindowStatus" :show-close="false" align-center>
             <template #header>
                 <div flex items-center h="full" bg-yellow-5><span c-white m-3>查看餐厅详情</span></div>
             </template>

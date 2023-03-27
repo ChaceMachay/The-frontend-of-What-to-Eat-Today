@@ -1,3 +1,4 @@
+import { onKeyDown } from "@vueuse/core";
 import { windowsMessage, canteenWindowStatus, dishWindowStatus } from "../status/data" 
 
 export function convertToChinaNum(num) {
@@ -36,10 +37,11 @@ export function convertToChinaNum(num) {
 }
 
 export const closeWindows = (done)=>{
-    
     canteenWindowStatus.value = false
     dishWindowStatus.value = false
 
     windowsMessage.value = null
+    
+    console.log("ok")
     return done
 }

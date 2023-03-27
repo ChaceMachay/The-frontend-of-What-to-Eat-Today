@@ -4,7 +4,7 @@ import { range } from 'lodash'
 
 import { windowsMessage, editWindowStatus, canteenWindowsLimit, canteenLevelLimit, canteenWindowStatus } from "../status/data.js"
 import { getCampus } from "../api/canteen"
-import { closeWindows, convertToChinaNum } from "../api/etc"
+import { convertToChinaNum } from "../api/etc"
 
 console.log("canteen edit was loaded, and it message is: ", windowsMessage.value)
 
@@ -73,6 +73,7 @@ const userPrimaryCanteenEdit = () => {
                 })
 
                 console.log(userCanteenEditInput.value)
+                
                 windowsMessage.value = null
                 editWindowStatus.value = false
             }
@@ -108,8 +109,7 @@ initialInput()
 
 
     <div class="dialog" v-if="canteenWindowStatus">
-        <el-dialog v-model="editWindowStatus" :show-close="false" align-center :close-on-click-modal="false"
-            :before-close="closeWindows">
+        <el-dialog v-model="editWindowStatus" :show-close="false" align-center :close-on-click-modal="false">
             <template #header>
                 <div flex items-center h="full" bg-yellow-5><span c-white m-3>修改餐厅信息</span></div>
             </template>

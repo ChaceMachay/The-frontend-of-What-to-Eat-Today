@@ -93,8 +93,7 @@ initialInput()
 
 
     <div class="dialog" v-if="canteenWindowStatus">
-        <el-dialog v-model="addWindowStatus" :show-close="false" align-center :close-on-click-modal="false"
-            :before-close="closeWindows">
+        <el-dialog v-model="addWindowStatus" :show-close="false" align-center :close-on-click-modal="false">
             <template #header>
                 <div flex items-center h="full" bg-yellow-5><span c-white m-3>添加餐厅信息</span></div>
             </template>
