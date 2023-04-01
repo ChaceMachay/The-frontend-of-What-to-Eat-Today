@@ -2,9 +2,9 @@
 import { ref } from "vue"
 import { range } from 'lodash'
 
-import { windowsMessage, editWindowStatus, canteenWindowsLimit, canteenLevelLimit, dishWindowStatus } from "../status/data.js"
-import { getCampus } from "../api/canteen"
-import { convertToChinaNum } from "../api/etc"
+import { windowsMessage, editWindowStatus, canteenWindowsLimit, canteenLevelLimit, dishWindowStatus } from "../../status/data.js"
+import { getCampus } from "../../api/canteen.js"
+import { convertToChinaNum } from "../../api/etc.js"
 
 console.log("canteen edit was loaded, and it message is: ", windowsMessage.value)
 

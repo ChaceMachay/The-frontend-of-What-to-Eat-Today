@@ -1,11 +1,17 @@
-<script setup>
+<script setup> 
 import { ref } from "vue"
 import { range } from 'lodash'
 
-import { windowsMessage, showWindowStatus, canteenWindowStatus } from "../status/data.js"
-import { convertToChinaNum } from "../api/etc"
+import { windowsMessage, showWindowStatus, canteenWindowStatus } from "../../status/data.js"
+import { convertToChinaNum } from "../../api/etc.js"
 
 console.log("canteen show was loaded, and it message is: ",windowsMessage.value)
+
+const userCloseCanteenShowWindow = () => {
+            windowsMessage.value = null
+            showWindowStatus.value = false
+}
+
 
 </script>
 
@@ -37,6 +43,16 @@ console.log("canteen show was loaded, and it message is: ",windowsMessage.value)
                                     <span>{{ level.information[i*2+1].windows_id.substring(4, 7) * 1 }}号窗口名称：{{ level.information[i*2+1].windows_name }}</span>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div flex-row w="full">
+                            <div grow>
+                            </div>
+                            <div grow>
+                                <el-button @click="userCloseCanteenShowWindow">返回</el-button>
+                            </div>
+                            <div grow></div>
                         </div>
                     </div>
                 </el-main>

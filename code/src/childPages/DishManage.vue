@@ -1,11 +1,13 @@
 <script setup>
 import { ref, computed } from "vue"
 import { useRouter } from "vue-router"
-import { getDishInformationByPage, getDishInformationBySearch } from "../api/dish"
 import { showWindowStatus,editWindowStatus } from "../status/data" 
+//import { getDishInformationByPage, getDishInformationBySearch } from "../api/dish"
 
-import DishShow from "../components/DishShow.vue"
-import DishEdit from "../components/DishEdit.vue"
+import { getDishInformationByPage, getDishInformationBySearch } from "../test/api/dish"
+
+import DishShow from "../components/dish/DishShow.vue"
+import DishEdit from "../components/dish/DishEdit.vue"
 import Operations from "../components/Operations.vue"
 
 const router = useRouter()
@@ -65,7 +67,7 @@ const search = async () => {
 
 <template>
     <DishShow v-if="showWindowStatus"  />
-    <DishEdit v-if="editWindowStatus" />
+    <!-- <DishEdit v-if="editWindowStatus" /> -->
 
 
     <!-- 表格的上下页检验和样式没做。 -->
@@ -83,14 +85,14 @@ const search = async () => {
         </el-header>
         <el-main>
             <el-table :data="dishInformation">
-                <el-table-column label="校区" grow="1">
+                <el-table-column label="uid" grow="1">
                     <template #default="scope">
-                        {{scope.row.campus.campus_name}}
+                        {{scope.row.dish_id}}
                     </template>
                 </el-table-column>
                 <el-table-column label="名称" grow="5">
                     <template #default="scope">
-                        {{scope.row.Dish_name}}
+                        {{scope.row.dish_name}}
                     </template>
                 </el-table-column>
                 <el-table-column label="管理" grow="1">

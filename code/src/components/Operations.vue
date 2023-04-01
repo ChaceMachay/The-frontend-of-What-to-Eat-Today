@@ -3,8 +3,8 @@ import { ref, defineProps } from 'vue'
 
 import { windowsMessage, showWindowStatus, editWindowStatus, windowStatus, canteenWindowStatus, dishWindowStatus } from '../status/data'
 
-import { deleteCanteen } from './CanteenDelete'
-import { deleteDish } from './DishDelete'
+import { deleteCanteen } from './canteen/CanteenDelete'
+import { deleteDish } from './dish/DishDelete'
 
 
 

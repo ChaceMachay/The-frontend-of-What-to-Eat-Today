@@ -45,3 +45,30 @@ export const closeWindows = (done)=>{
     console.log("ok")
     return done
 }
+
+export const showDishDateChinese = (obj) => {
+    let res = ''
+    if(obj.morning){
+        res += '早餐'
+        if (obj.noon){
+            res += '、午餐'
+        }
+        if (obj.night){
+            res += '、晚餐'
+        }
+        return res
+    }else if(obj.noon) {
+        res += '午餐'
+        if (obj.night){
+            res += '、晚餐'
+        }
+        return res
+    }else if (obj.night){
+        res += '晚餐'
+        return res
+    }else {
+        res += '尚未开放供应'
+        return res
+    }
+
+}

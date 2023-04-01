@@ -1,12 +1,14 @@
 <script setup>
 import { ref, computed } from "vue"
 import { useRouter } from "vue-router"
-import { getCanteenInformationByPage, getCanteenInformationBySearch } from "../api/canteen"
 import { showWindowStatus, editWindowStatus,addWindowStatus, windowStatus, canteenWindowStatus } from "../status/data"
+//import { getCanteenInformationByPage, getCanteenInformationBySearch } from "../api/canteen"
 
-import CanteenShow from "../components/CanteenShow.vue"
-import CanteenEdit from "../components/CanteenEdit.vue"
-import CanteenAdd from "../components/CanteenAdd.vue"
+import { getCanteenInformationByPage, getCanteenInformationBySearch } from "../test/api/canteen"
+
+import CanteenShow from "../components/canteen/CanteenShow.vue"
+import CanteenEdit from "../components/canteen/CanteenEdit.vue"
+import CanteenAdd from "../components/canteen/CanteenAdd.vue"
 import Operations from "../components/Operations.vue"
 
 const router = useRouter()
