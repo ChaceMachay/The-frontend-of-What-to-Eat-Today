@@ -122,3 +122,5 @@ export const getCanteenInformationBySearch =  (sreachWord) => {
             },
         ]
 }
+
+//export const initalCanteen =  () => {

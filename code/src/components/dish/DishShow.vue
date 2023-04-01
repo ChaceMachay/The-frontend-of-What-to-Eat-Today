@@ -3,20 +3,23 @@ import { ref } from "vue"
 import { range } from 'lodash'
 
 import { windowsMessage, showWindowStatus, dishWindowStatus } from "../../status/data.js"
-import { convertToChinaNum, showDishDateChinese } from "../../api/etc.js"
+import { showDishDateChinese } from "../../api/etc.js"
 
 console.log("dish show was loaded, and it message is: ",windowsMessage.value)
 
 const userCloseDishShowWindow = () => {
+            dishWindowStatus.value = false
             windowsMessage.value = null
             showWindowStatus.value = false
 }
+
+const labelList = ref([{'labelName':'汤类',"labelClass": "green"},{"labelName":'辣',"labelClass":"red"}])
 
 </script>
 
 <template>
     <div class="dialog" v-if="dishWindowStatus">
-        <el-dialog v-model="showWindowStatus" :show-close="false" align-center>
+        <el-dialog v-model="showWindowStatus" :show-close="false" align-center :before-close="userCloseDishShowWindow">
             <template #header>
                 <div flex items-center h="full" bg-yellow-5><span c-white m-3>查看餐厅详情</span></div>
             </template>
@@ -36,7 +39,10 @@ const userCloseDishShowWindow = () => {
                         <div grow><span>清真：</span><el-checkbox v-model="windowsMessage.muslim" disabled></el-checkbox></div>
                     </div>
                     <div m-5 flex style="width: 100%;">
-                        <div grow><span>标签：</span><span>{{ windowsMessage.dish_id.slice(0,1) }}</span></div>
+                        <div grow flex flex-row>
+                            <span>标签：</span>
+                            <div c-white rd m-1 v-for="item in labelList" :class="item.labelClass"><span class="label-text">{{item.labelName}}</span></div>
+                        </div>
                     </div>
                     <div m-5 flex style="width: 100%;">
                         <div grow><span>图片：</span><span>{{ windowsMessage.dish_id.slice(0,1) }}</span></div>
@@ -73,5 +79,18 @@ const userCloseDishShowWindow = () => {
 .dialog:deep(.el-dialog__body) {
     padding: 0;
     margin: 0;
+}
+
+.label-text{
+    margin: 1rem;
+    margin-top: 1.5rem;
+}
+
+.green{
+    background-color: #67C23A;
+}
+
+.red{
+    background-color: #F56C6C;
 }
 </style>

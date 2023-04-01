@@ -8,6 +8,7 @@ import { convertToChinaNum } from "../../api/etc.js"
 console.log("canteen show was loaded, and it message is: ",windowsMessage.value)
 
 const userCloseCanteenShowWindow = () => {
+            canteenWindowStatus.value = false
             windowsMessage.value = null
             showWindowStatus.value = false
 }
@@ -17,7 +18,7 @@ const userCloseCanteenShowWindow = () => {
 
 <template>
     <div class="dialog" v-if="canteenWindowStatus">
-        <el-dialog v-model="showWindowStatus" :show-close="false" align-center>
+        <el-dialog v-model="showWindowStatus" :show-close="false" align-center :before-close="userCloseCanteenShowWindow">
             <template #header>
                 <div flex items-center h="full" bg-yellow-5><span c-white m-3>查看餐厅详情</span></div>
             </template>

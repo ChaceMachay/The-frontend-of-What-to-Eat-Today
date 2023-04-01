@@ -54,7 +54,7 @@ const editItem = () => {
         console.log("undefined type props.")
         alert("系统版本过低，请更新系统后重试。")
     }
-    console.log("editItem was called, and it message is: ", windowsMessage.value)
+    console.log("editItem was called, and it message is: ",'1' ,windowsMessage.value,'2' ,canteenWindowStatus.value,'3' ,dishWindowStatus.value)
 }
 
 const deleteItem = () => {

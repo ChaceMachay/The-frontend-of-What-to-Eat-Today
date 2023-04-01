@@ -74,6 +74,7 @@ const userPrimaryCanteenEdit = () => {
 
                 console.log(userCanteenEditInput.value)
                 
+                canteenWindowStatus.value = false
                 windowsMessage.value = null
                 editWindowStatus.value = false
             }
@@ -84,7 +85,6 @@ const userPrimaryCanteenEdit = () => {
         })
 }
 
-console.log(range(5.5))
 
 const userCloseCanteenEditWindow = () => {
     ElMessageBox.confirm("数据尚未保存，是否退出？", "返回确认", {
@@ -93,6 +93,7 @@ const userCloseCanteenEditWindow = () => {
         type: "warning",
     })
         .then(() => {
+            canteenWindowStatus.value = false
             windowsMessage.value = null
             editWindowStatus.value = false
         })

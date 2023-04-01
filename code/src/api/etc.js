@@ -48,6 +48,7 @@ export const closeWindows = (done)=>{
 
 export const showDishDateChinese = (obj) => {
     let res = ''
+    console.log(obj)
     if(obj.morning){
         res += '早餐'
         if (obj.noon){

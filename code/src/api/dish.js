@@ -25,6 +25,7 @@ export const getCampus = async () => {
 }
 
 export const getDishInformationBySearch = async (sreachWord) => {
+    console.log("搜索菜品：",sreachWord)
     return await http.get(
         './searchCanteen',
         {
@@ -34,5 +35,4 @@ export const getDishInformationBySearch = async (sreachWord) => {
                 },
         },
     )
-    console.log("搜索菜品：",sreachWord)
 }

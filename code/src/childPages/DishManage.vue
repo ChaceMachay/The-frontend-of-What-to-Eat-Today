@@ -1,8 +1,9 @@
 <script setup>
 import { ref, computed } from "vue"
 import { useRouter } from "vue-router"
-import { showWindowStatus,editWindowStatus } from "../status/data" 
+import { showWindowStatus, editWindowStatus } from "../status/data"
 //import { getDishInformationByPage, getDishInformationBySearch } from "../api/dish"
+import { showDishDateChinese } from "../api/etc"
 
 import { getDishInformationByPage, getDishInformationBySearch } from "../test/api/dish"
 
@@ -47,11 +48,11 @@ const lastPage = async () => {
 
 const search = async () => {
     const loading = ElLoading.service({
-                    fullscreen: true,
-                    text: "正在搜索",
-                })
+        fullscreen: true,
+        text: "正在搜索",
+    })
     try {
-        dishInformation.value = getDishInformationBySearch(userSearchInput.value, 1 ,qty.value)
+        dishInformation.value = getDishInformationBySearch(userSearchInput.value, 1, qty.value)
         userSearchInput.value = null
     }
     catch {
@@ -66,12 +67,12 @@ const search = async () => {
 </script>
 
 <template>
-    <DishShow v-if="showWindowStatus"  />
-    <!-- <DishEdit v-if="editWindowStatus" /> -->
+    <DishShow v-if="showWindowStatus" />
+    <DishEdit v-if="editWindowStatus" />
 
 
     <!-- 表格的上下页检验和样式没做。 -->
-    
+
 
     <el-container class="div">
         <el-header flex flex-row style="justify-content: space-between;" item-center>
@@ -87,24 +88,37 @@ const search = async () => {
             <el-table :data="dishInformation">
                 <el-table-column label="uid" grow="1">
                     <template #default="scope">
-                        {{scope.row.dish_id}}
+                        {{ scope.row.dish_id }}
                     </template>
                 </el-table-column>
                 <el-table-column label="名称" grow="5">
                     <template #default="scope">
-                        {{scope.row.dish_name}}
+                        {{ scope.row.dish_name }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="地点" grow="1">
+                    <template #default="scope">
+                        {{ scope.row.dish_id.slice(0, 1) }}-{{ scope.row.dish_id.slice(1, 2) }}-{{ scope.row.dish_id.slice(2, 4) }}-{{ scope.row.dish_id.slice(4, 6) }}-{{ scope.row.dish_name }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="时间" grow="1">
+                    <template #default="scope">
+                        {{showDishDateChinese(scope.row.date)}}
                     </template>
                 </el-table-column>
                 <el-table-column label="管理" grow="1">
                     <template #default="scope">
-                        <Operations :item="scope.row" type="dish"  />
+                        <Operations :item="scope.row" type="dish" />
                     </template>
                 </el-table-column>
             </el-table>
         </el-main>
         <el-footer>
+            <div flex flex-row>
             <el-button @click="lastPage">上一页</el-button>
+            <div>{{nowPage}}</div>
             <el-button @click="nextPage">下一页</el-button>
+            </div>
         </el-footer>
     </el-container>
 </template>

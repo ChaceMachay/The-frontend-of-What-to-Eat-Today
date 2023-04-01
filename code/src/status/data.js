@@ -12,6 +12,6 @@ export const addWindowStatus = ref(false)
 export const windowStatus = computed(() => {
     return showWindowStatus.value || editWindowStatus.value || addWindowStatus.value
 })
-export const windowsMessage = ref(null)
+export const windowsMessage = ref({})
 
 

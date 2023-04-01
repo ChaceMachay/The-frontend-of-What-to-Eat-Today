@@ -1,4 +1,4 @@
-<script setup>
+<script setup> 
 import { ref, computed } from "vue"
 import { useRouter } from "vue-router"
 import { showWindowStatus, editWindowStatus,addWindowStatus, windowStatus, canteenWindowStatus } from "../status/data"
