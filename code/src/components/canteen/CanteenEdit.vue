@@ -115,7 +115,7 @@ initialInput()
                 <div flex items-center h="full" bg-yellow-5><span c-white m-3>修改餐厅信息</span></div>
             </template>
             <el-container>
-                <el-main style="overflow-x: hidden;overflow-y:auto;">
+                <el-main style="overflow-x: hidden; overflow-y:auto; ">
                     <div m-5 flex flex-row style="width: 80%;">
                         <div grow flex flex-row>
                             <span mt-2>&ensp;校区：</span>
@@ -124,10 +124,10 @@ initialInput()
                                     :value="item.campus_id" />
                             </el-select>
                         </div>
-                        <div grow flex flex-row><span>名称：</span><el-input v-model="userCanteenEditInput.canteen_name" /></div>
+                        <div grow flex flex-row><span mt-1>名称：</span><div style="width: auto;"><el-input v-model="userCanteenEditInput.canteen_name" /></div></div>
                     </div>
                     <div m-5 flex flex-row style="width: 100%;">
-                        <div grow flex flex-row><span>&ensp;层数：</span><el-input v-model.number="userCanteenEditInput.level_num" /></div>
+                        <div grow flex flex-row><span mt-1>&ensp;层数：</span><div><el-input v-model.number="userCanteenEditInput.level_num" /></div></div>
                         <div grow></div>
                     </div>
 
@@ -156,8 +156,8 @@ initialInput()
                         <div flex-row w="full">
                             <div grow>
                             </div>
-                            <div grow>
-                                <el-button @click="userPrimaryCanteenEdit">修改</el-button>
+                            <div grow style="margin: 2%;">
+                                <el-button @click="userPrimaryCanteenEdit">确定</el-button>
                                 <el-button @click="userCloseCanteenEditWindow">返回</el-button>
                             </div>
                             <div grow></div>
@@ -202,4 +202,6 @@ initialInput()
     position: relative;
     left: 2rem;
 }
+
+
 </style>

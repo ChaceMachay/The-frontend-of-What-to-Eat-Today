@@ -93,42 +93,42 @@ initialInput()
 
 
     <div class="dialog" v-if="canteenWindowStatus" >
-        <el-dialog m-3 v-model="addWindowStatus" :show-close="false" align-center :close-on-click-modal="false">
+        <el-dialog v-model="addWindowStatus" :show-close="false" align-center :close-on-click-modal="false">
             <template #header>
-                <div flex items-center  bg-yellow-5><span c-white m-3>添加餐厅信息</span></div>
+                <div flex items-center h="full" bg-yellow-5><span c-white m-3>添加餐厅信息</span></div>
             </template>
             <el-container>
-                <el-main style="overflow-x: hidden; overflow-y:auto;">
-                    <div m-5 flex flex-row style="width: 100%;">
+                <el-main style="overflow-x: hidden; overflow-y:auto; ">
+                    <div m-5 flex flex-row style="width: 80%;">
                         <div grow flex flex-row>
-                            <span mt-2>校区：</span>
+                            <span mt-2>&ensp;校区：</span>
                             <el-select v-model="userCanteenEditInput.campus_id" size="large">
                                 <el-option v-for="item in options" :key="item.campus_id" :label="item.campus_name"
                                     :value="item.campus_id" />
                             </el-select>
                         </div>
-                        <div grow flex flex-row><span mt-2>名称：</span><el-input  v-model="userCanteenEditInput.canteen_name" /></div>
+                        <div grow flex flex-row><span mt-1>名称：</span><div style="width: auto;"><el-input v-model="userCanteenEditInput.canteen_name" /></div></div>
                     </div>
-                    <div m-5 flex style="width: 100%;" flex-row>
-                        <div grow flex flex-row><span>层数：</span><el-input v-model.number="userCanteenEditInput.level_num" /></div>
+                    <div m-5 flex flex-row style="width: 100%;">
+                        <div grow flex flex-row><span mt-1>&ensp;层数：</span><div><el-input v-model.number="userCanteenEditInput.level_num" /></div></div>
                         <div grow></div>
                     </div>
 
 
                     <div m-5 flex flex-col style="width: 100%;" v-for="i in range(userCanteenEditInput.level_num)">
-                        <div grow flex flex-row><span>&ensp;第{{ convertToChinaNum(i + 1) }}层
+                        <div grow flex flex-row>&ensp;<span>&ensp;第{{ convertToChinaNum(i + 1) }}层
                                 窗口数：<el-input v-model.number="userCanteenEditInput.information[i].windows_num" /></span>
                         </div>
                         <div flex flex-col
                             v-for="j in range((userCanteenEditInput.information[i].windows_num + (userCanteenEditInput.information[i].windows_num) % 2) / 2)">
                             <div flex flex-row>
-                                <div grow mt-5 mb-5 flex flex-row>
-                                    <span>&ensp;{{ j * 2 + 1 }} 号窗口名称：<el-input
+                                <div grow mt-5 mb-5 flex flex-row >
+                                    &ensp;<span>&ensp;{{ j * 2 + 1 }}号窗口名称：<el-input
                                             v-model="userCanteenEditInput.information[i].information[j * 2]" /></span>
                                 </div>
-                                <div grow mt-5 mb-5 flex flex-row v-if="((j + 1) < ((userCanteenEditInput.information[i].windows_num + userCanteenEditInput.information[i].windows_num % 2) / 2))
+                                <div grow flex flex-row mt-5 mb-5 v-if="((j + 1) < ((userCanteenEditInput.information[i].windows_num + userCanteenEditInput.information[i].windows_num % 2) / 2))
                                     || !(userCanteenEditInput.information[i].windows_num % 2)">
-                                    <span>{{ j * 2 + 2 }}号窗口名称：<el-input
+                                    <span>&ensp;{{ j * 2 + 2 }}号窗口名称：<el-input
                                             v-model="userCanteenEditInput.information[i].information[j * 2 + 1]" /></span>
                                 </div>
                                 <div grow="2" mt-5 mb-5 v-else></div>
@@ -139,8 +139,8 @@ initialInput()
                         <div flex-row w="full">
                             <div grow>
                             </div>
-                            <div grow>
-                                <el-button @click="userPrimaryCanteenEdit">添加</el-button>
+                            <div grow style="margin: 2%;">
+                                <el-button @click="userPrimaryCanteenEdit">确定</el-button>
                                 <el-button @click="userCloseCanteenEditWindow">返回</el-button>
                             </div>
                             <div grow></div>
