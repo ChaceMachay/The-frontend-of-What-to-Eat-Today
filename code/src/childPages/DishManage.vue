@@ -116,7 +116,9 @@ const search = async () => {
         <el-footer>
             <div flex flex-row>
             <el-button @click="lastPage">上一页</el-button>
-            <div>{{nowPage}}</div>
+            &ensp;
+            <div mt-1> {{ nowPage }} </div>
+            &ensp;
             <el-button @click="nextPage">下一页</el-button>
             </div>
         </el-footer>

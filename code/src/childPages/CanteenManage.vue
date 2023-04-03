@@ -128,4 +128,11 @@ const userAddCanteen = () => {
     height: 55%;
     margin-right: 5%;
 }
+
+.div:deep(.el-button) {
+    color: white;
+    background-color: rgb(251, 189, 23);
+    position: relative;
+    
+}
 </style>

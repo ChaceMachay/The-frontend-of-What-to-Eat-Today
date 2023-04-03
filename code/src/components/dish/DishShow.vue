@@ -23,10 +23,10 @@ const labelList = ref([{'labelName':'汤类',"labelClass": "green"},{"labelName"
             <template #header>
                 <div flex items-center h="full" bg-yellow-5><span c-white m-3>查看餐厅详情</span></div>
             </template>
-            <el-container>
+            <el-container m-4>
                 <el-main style="overflow-x: hidden;">
                     <div m-5 flex flex-row style="width: 100%;">
-                        <div grow><span>uid：</span><span>{{ windowsMessage.dish_id }}</span></div>
+                        <div grow><span>uid: </span><span>{{ windowsMessage.dish_id }}</span></div>
                         <div grow><span>名称：</span><span>{{ windowsMessage.dish_name }}</span></div>
                         <div grow><span>时间：</span><span>{{ showDishDateChinese(windowsMessage.date) }}</span></div>
                     </div>
@@ -51,12 +51,14 @@ const labelList = ref([{'labelName':'汤类',"labelClass": "green"},{"labelName"
                         <div grow><span>备用图片：</span><span>{{ windowsMessage.dish_id.slice(0,1) }}</span></div>
                     </div>
                     <div>
-                        <div flex-row w="full">
-                            <div grow></div>
-                            <div grow>
-                                <el-button @click="userCloseDishShowWindow">返回</el-button>
+                        <div m-1 flex style="width: 100%;">
+                            <div flex-row w="full">
+                                <div grow></div>
+                                <div grow>
+                                    <el-button @click="userCloseDishShowWindow">返回</el-button>
+                                </div>
+                                <div grow></div>
                             </div>
-                            <div grow></div>
                         </div>
                     </div>
                 </el-main>
@@ -92,5 +94,12 @@ const labelList = ref([{'labelName':'汤类',"labelClass": "green"},{"labelName"
 
 .red{
     background-color: #F56C6C;
+}
+
+.dialog:deep(.el-button) {
+    color: white;
+    background-color: rgb(251, 189, 23);
+    position: relative;
+    left: 1rem;
 }
 </style>

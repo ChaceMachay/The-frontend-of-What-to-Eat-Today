@@ -1,4 +1,3 @@
-import axios from "axios"
 
 import { getUserLoginInformation } from "./storage"
 import { http } from "../utils/http"

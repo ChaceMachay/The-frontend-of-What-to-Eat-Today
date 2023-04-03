@@ -127,16 +127,16 @@ const userCloseDishEditWindow = () => {
 
 <template>
     <div class="dialog" v-if="dishWindowStatus">
-        <el-dialog v-model="editWindowStatus" :show-close="false" align-center :close-on-click-modal="false">
+        <el-dialog rounded v-model="editWindowStatus" :show-close="false" align-center :close-on-click-modal="false">
             <template #header>
                 <div flex items-center h="full" bg-yellow-5><span c-white m-3>修改菜品信息</span></div>
             </template>
-            <el-container>
+            <el-container m-3>
                 <el-main style="overflow-x: hidden;">
                     <div m-5 flex flex-row style="width: 100%;">
                         <div grow><span>uid：</span><span>{{ windowsMessage.dish_id }}</span></div>
                         <div grow><span>名称：</span><input v-model="userDishEditInput.dish_name" /></div>
-                        <div grow flex flex-row><span>时间：</span>
+                        <div grow flex flex-row><span mt-1.3>时间：</span>
                             <el-checkbox v-model="userDishEditInput.date.morning" label="早"></el-checkbox>
                             <el-checkbox v-model="userDishEditInput.date.noon" label="中"></el-checkbox>
                             <el-checkbox v-model="userDishEditInput.date.night" label="晚"></el-checkbox>
@@ -170,13 +170,13 @@ const userCloseDishEditWindow = () => {
                     </div>
                     <div m-5 flex style="width: 100%;">
                         <div grow flex flex-row>
-                            <span>标签：</span>
+                            <span mt-1>标签：</span>
                             <div c-white rd m-1 v-for="item in labelList" :class="item.labelClass"><span
                                     class="label-text">{{ item.labelName }}</span></div>
                         </div>
                     </div>
                     <div m-5 flex style="width: 100%;">
-                        <div grow flex flex-row><span>图片：</span>
+                        <div grow flex flex-row><span mt-1>图片：</span>
                             <el-upload :action="fileUploadURL" :limit="1" :on-exceed="handleExceed" ref="upload" >
                                 <template #trigger>
                                     <el-button type="primary">上传</el-button>
@@ -185,7 +185,7 @@ const userCloseDishEditWindow = () => {
                         </div>
                     </div>
                     <div m-5 flex style="width: 100%;">
-                        <div grow flex flex-row><span>备用图片：</span>
+                        <div grow flex flex-row><span mt-1>备用图片：</span>
                             <el-upload :action="fileUploadURL" :limit="1" :on-exceed="handleExceed" ref="upload">
                                 <template #trigger>
                                     <el-button type="primary">上传</el-button>
@@ -196,7 +196,7 @@ const userCloseDishEditWindow = () => {
                         <div flex-row w="full">
                             <div grow></div>
                             <div grow>
-                                <el-button @click="userPrimaryDishEdit">修改</el-button>
+                                <el-button @click="userPrimaryDishEdit">确定</el-button>
                                 <el-button @click="userCloseDishEditWindow">返回</el-button>
                             </div>
                             <div grow></div>
@@ -238,7 +238,10 @@ const userCloseDishEditWindow = () => {
 .dialog:deep(.el-button) {
     color: white;
     background-color: rgb(251, 189, 23);
+    position: relative;
+    left: 20px;
 }
+
 
 .label-text {
     margin: 1rem;
@@ -254,6 +257,6 @@ const userCloseDishEditWindow = () => {
 }
 
 .yellow {
-    background-color: #E6A23C;
+    background-color: rgb(251,189,23);
 }
 </style>

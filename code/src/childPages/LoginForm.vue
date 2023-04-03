@@ -45,14 +45,14 @@ const userLoginEvent = async () => {
 <template>
     <div class="form">
         <ElCard shadow="always">
-            <ElForm ref="formEl" :model="userLoginFormInput" :rules="rules" label-width="72px"
-                style="width: 25vw;height: 30vh;justify-content: flex-end;" flex flex-col class="form_body">
+            <ElForm ref="formEl" :model="userLoginFormInput" :rules="rules" label-width="70px"
+                style="width: 25vw;height: 33vh;justify-content: flex-end;" flex flex-col class="form_body">
                 <div h="full" flex flex-col style="justify-content: center;">
                     <ElFormItem label="用户名" prop="userAccount">
                         <ElInput v-model="userLoginFormInput.userAccount" size="large" :class="input"></ElInput>
                     </ElFormItem>
 
-                    <ElFormItem label="密码" prop="userPassword">
+                    <ElFormItem label="密&emsp;码" prop="userPassword">
                         <ElInput type="password" v-model="userLoginFormInput.userPassword" size="large"></ElInput>
                     </ElFormItem>
                 </div>
