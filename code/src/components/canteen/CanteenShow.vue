@@ -18,9 +18,9 @@ const userCloseCanteenShowWindow = () => {
 
 <template>
     <div class="dialog" v-if="canteenWindowStatus">
-        <el-dialog  v-model="showWindowStatus" :show-close="false" align-center :before-close="userCloseCanteenShowWindow">
+        <el-dialog v-model="showWindowStatus" :show-close="false" align-center :before-close="userCloseCanteenShowWindow">
             <template #header>
-                <div flex items-center h="full"  ><span c-white m-3>查看餐厅详情</span></div>
+                <div flex items-center h="full"  bg-yellow-5><span c-white m-3>查看餐厅详情</span></div>
             </template>
             <el-container>
                 <el-main style="overflow-x: hidden;">
