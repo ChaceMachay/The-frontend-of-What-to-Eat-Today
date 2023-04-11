@@ -2,46 +2,47 @@
 import { ref } from "vue"
 import { range } from 'lodash'
 
-import { windowsMessage, showWindowStatus, canteenWindowStatus } from "../../status/data.js"
+import { windowsMessage, showCanteenWindowStatus } from "../../status/data.js"
 import { convertToChinaNum } from "../../api/etc.js"
 
 console.log("canteen show was loaded, and it message is: ",windowsMessage.value)
+const showCanteenData = ref()
+showCanteenData.value = JSON.parse(JSON.stringify(windowsMessage.value))
 
 const userCloseCanteenShowWindow = () => {
-            canteenWindowStatus.value = false
-            windowsMessage.value = null
-            showWindowStatus.value = false
+            showCanteenWindowStatus.value = false
 }
 
 
+console.log(showCanteenData.value)
 </script>
 
 <template>
-    <div class="dialog" v-if="canteenWindowStatus">
-        <el-dialog v-model="showWindowStatus" :show-close="false" align-center :before-close="userCloseCanteenShowWindow">
+    <div class="dialog">
+        <el-dialog v-model="showCanteenWindowStatus" :show-close="false" align-center append-to-body>
             <template #header>
-                <div flex items-center h="full"  bg-yellow-5><span c-white m-3>查看餐厅详情</span></div>
+                <div flex items-center h="full" bg-yellow-5><span c-white m-3>查看餐厅详情</span></div>
             </template>
             <el-container>
                 <el-main style="overflow-x: hidden;">
                     <div m-5 flex flex-row style="width: 100%;">
-                        <div grow><span>&emsp;校区：</span><span>{{ windowsMessage.campus.campus_name }}</span></div>
-                        <div grow><span>名称：</span><span>{{ windowsMessage.canteen_name }}</span></div>
+                        <div grow><span>校区：</span><span>{{ showCanteenData.campus.campus_name }}</span></div>
+                        <div grow><span>名称：</span><span>{{ showCanteenData.canteen_name }}</span></div>
                     </div>
                     <div m-5 flex style="width: 100%;">
-                        <div grow><span>&emsp;层数：</span><span>{{ windowsMessage.level_num }}</span></div>
+                        <div grow><span>层数：</span><span>{{ showCanteenData.level_num }}</span></div>
                         <div grow></div>
                     </div>
-                    <div m-5 flex flex-col style="width: 100%;" v-for="level in windowsMessage.information">
-                        <div grow><span>&emsp;第{{ convertToChinaNum(level.level_id.substring(2, 4)) }}层
+                    <div m-5 flex flex-col style="width: 100%;" v-for="level in showCanteenData.information">
+                        <div grow><span>{{ convertToChinaNum(level.level) }}层
                                 窗口数：{{ level.windows_num }}</span></div>
                         <div flex flex-col v-for="i in range((level.windows_num + level.windows_num%2 )/2)">
                             <div flex flex-row>
                                 <div grow mt-5 mb-5 >
-                                    <span>&emsp;{{ level.information[i*2].windows_id.substring(4, 7) * 1 }}号窗口名称：{{ level.information[i*2].windows_name }}</span>
+                                    <span>{{ level.information[i*2].windows_id.substring(4, 7) * 1 }}号窗口名称：{{ level.information[i*2].windows_name }}</span>
                                 </div>
                                 <div grow mt-5 mb-5 v-if="(i!==(level.windows_num + level.windows_num%2 )/2-1)||!(level.windows_num%2)">
-                                    <span>&emsp;{{ level.information[i*2+1].windows_id.substring(4, 7) * 1 }}号窗口名称：{{ level.information[i*2+1].windows_name }}</span>
+                                    <span>{{ level.information[i*2+1].windows_id.substring(4, 7) * 1 }}号窗口名称：{{ level.information[i*2+1].windows_name }}</span>
                                 </div>
                             </div>
                         </div>
@@ -52,7 +53,6 @@ const userCloseCanteenShowWindow = () => {
                             </div>
                             <div grow>
                                 <el-button @click="userCloseCanteenShowWindow">返回</el-button>
-                                <p>&emsp;</p>
                             </div>
                             <div grow></div>
                         </div>
@@ -77,13 +77,5 @@ const userCloseCanteenShowWindow = () => {
 .dialog:deep(.el-dialog__body) {
     padding: 0;
     margin: 0;
-}
-
-.dialog:deep(.el-button) {
-    color: white;
-    background-color: rgb(251, 189, 23);
-    position: relative;
-    left: 2rem;
-    
 }
 </style>

@@ -28,13 +28,25 @@ const userLoginEvent = async () => {
         return
     }
     try {
-        const { accessToken, userName } = await userLogin(userLoginFormInput.value)
-        user.value =
-        {
-            accessToken,
-            userName,
-            userLoginStatus: 1,
-        }
+        let formData = new URLSearchParams()
+        formData.append("username", userLoginFormInput.value.userAccount)
+        formData.append("password", userLoginFormInput.value.userPassword)
+        await userLogin(formData)
+            .then((res) => {
+                console.log(res)
+                user.value =
+                {
+                    accessToken: res.data.access_token,
+                    userName: userLoginFormInput.value.userAccount,
+                    userLoginStatus: 1,
+                }
+                userLoginFormInput.value.userAccount = ''
+                userLoginFormInput.value.userPassword = ''
+            })
+            .catch(err => {
+                console.log(err)
+                alert("登录失败，请检查网络环境状态及账号密码是否输入正确。")
+            })
     }
     catch {
         alert("登录失败，请检查网络环境状态及账号密码是否输入正确。")
@@ -45,14 +57,14 @@ const userLoginEvent = async () => {
 <template>
     <div class="form">
         <ElCard shadow="always">
-            <ElForm ref="formEl" :model="userLoginFormInput" :rules="rules" label-width="70px"
-                style="width: 25vw;height: 33vh;justify-content: flex-end;" flex flex-col class="form_body">
+            <ElForm ref="formEl" :model="userLoginFormInput" :rules="rules" label-width="72px"
+                style="width: 25vw;height: 30vh;justify-content: flex-end;" flex flex-col class="form_body">
                 <div h="full" flex flex-col style="justify-content: center;">
                     <ElFormItem label="用户名" prop="userAccount">
                         <ElInput v-model="userLoginFormInput.userAccount" size="large" :class="input"></ElInput>
                     </ElFormItem>
 
-                    <ElFormItem label="密&emsp;码" prop="userPassword">
+                    <ElFormItem label="密码" prop="userPassword">
                         <ElInput type="password" v-model="userLoginFormInput.userPassword" size="large"></ElInput>
                     </ElFormItem>
                 </div>
@@ -66,10 +78,9 @@ const userLoginEvent = async () => {
 
 
 <style scoped>
-
 /* 这里改背景颜色 */
 .form:deep(.el-card) {
-    background-color: rgb(253,232,175);
+    background-color: rgb(253, 232, 175);
     border-radius: 15%;
 }
 
@@ -80,22 +91,24 @@ const userLoginEvent = async () => {
 
 /* 这里改背景颜色和字色 */
 .form:deep(.el-form-item__label) {
-    color: rgb(251,189,23);  
-    background-color: rgb(253,232,175);
+    color: rgb(251, 189, 23);
+    background-color: rgb(253, 232, 175);
 }
 
 /* 这里改按钮颜色和按钮字色 */
 .form:deep(.el-button) {
     color: white;
-    background-color: rgb(251,189,23);
+    background-color: rgb(251, 189, 23);
 }
-.form{
+
+.form {
     width: 25%;
 }
 
-.input{
+.input {
     width: 50%;
 }
+
 .form:deep(.el-input) {
     width: 80%;
 }

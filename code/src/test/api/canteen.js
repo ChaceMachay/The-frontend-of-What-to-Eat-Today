@@ -19,6 +19,7 @@ export const getCanteenInformationByPage = (page, qty) => {
                 "information":
                     [
                         {
+                            'level': -1,
                             "level_id": "5201",
                             "windows_num": 2,
                             "information": 

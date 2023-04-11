@@ -10,10 +10,13 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     CanteenAdd: typeof import('./src/components/canteen/CanteenAdd.vue')['default']
+    'CanteenAdd(unok)': typeof import('./src/components/canteen/CanteenAdd(unok).vue')['default']
     CanteenEdit: typeof import('./src/components/canteen/CanteenEdit.vue')['default']
     CanteenShow: typeof import('./src/components/canteen/CanteenShow.vue')['default']
+    DishAdd: typeof import('./src/components/dish/DishAdd.vue')['default']
     DishEdit: typeof import('./src/components/dish/DishEdit.vue')['default']
     DishShow: typeof import('./src/components/dish/DishShow.vue')['default']
+    DishUpload: typeof import('./src/components/dish/DishUpload.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
@@ -24,6 +27,7 @@ declare module '@vue/runtime-core' {
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElHeader: typeof import('element-plus/es')['ElHeader']
+    ElImage: typeof import('element-plus/es')['ElImage']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElMain: typeof import('element-plus/es')['ElMain']
     ElOption: typeof import('element-plus/es')['ElOption']

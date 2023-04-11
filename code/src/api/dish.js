@@ -36,3 +36,20 @@ export const getDishInformationBySearch = async (sreachWord) => {
         },
     )
 }
+
+export const uploadPicture = async (a) => {
+    let formData = new FormData()
+    console.log(formData)
+    formData.append('photo', a.file)
+    return await http.post('/background/photos', formData)
+    .then(res => {
+        console.log(res.data.data.url)
+        return res.data.data.url
+    }).catch((err) => {
+        console.log(err);
+    })
+}
+
+export const addDish = async () => {
+    
+}

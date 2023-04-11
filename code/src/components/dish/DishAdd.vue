@@ -1,28 +1,27 @@
 <script setup>
 import { ref, computed } from "vue"
-import { range } from 'lodash'
 
-import { windowsMessage, editDishWindowStatus } from "../../status/data.js"
+import { addDishWindowStatus } from "../../status/data.js"
 //import { getWindows } from "../../api/dish.js"
 import { showDishDateChinese } from "../../api/etc.js"
 
+
+import { getWindows} from "../../test/api/dish.js"
+
 import DishUpload from "./DishUpload.vue"
 
-import { getWindows } from "../../test/api/dish.js"
-
-console.log("dish edit was loaded, and it message is: ", windowsMessage.value)
+const url = 'https://0nlinetek-eat.azurewebsites.net'
 
 const options = getWindows()
 
 const labelList = ref([{ 'labelName': '汤类', "labelClass": "green" }, { "labelName": '辣', "labelClass": "red" }, { "labelName": "+", "labelClass": "yellow" }])
 
-const userDishEditInput = ref({
-    "dish_name": "红烧兔头",
-    "dish_id": "010101001",
+const userDishAddInput = ref({
+    "dish_name": "待定",
     "muslim": false,
-    "windows_id": "010101",
+    "windows_id": "110101",
     "label": [],
-    "picture": "/static/1681088941.490633.jpg",
+    "picture": "",
     "sparePicture": "",
     'date': {
         "morning": false,
@@ -32,8 +31,6 @@ const userDishEditInput = ref({
 
 }
 )
-
-userDishEditInput.value = JSON.parse(JSON.stringify(windowsMessage.value))
 
 const canteenList = computed(() => {
     let i = 0
@@ -47,20 +44,10 @@ const canteenList = computed(() => {
 
 const canteenIndex = ref(0)
 const levelIndex = ref(0)
-
-let canteenIndexSrc = JSON.parse(JSON.stringify(windowsMessage.value.dish_id.slice(1, 2) - 1))
-let levelIndexSrc = JSON.parse(JSON.stringify(options[canteenIndexSrc].level.findIndex(a => a.level_num === Number(windowsMessage.value.dish_id.slice(2, 4)))))
-
-canteenIndex.value = canteenIndexSrc
-levelIndex.value = levelIndexSrc
+canteenIndex.value = userDishAddInput.value.windows_id.slice(1, 2) - 1
 
 const levelList = computed(() => {
-    console.log(userDishEditInput.value.windows_id)
-    if (canteenIndex.value !== userDishEditInput.value.windows_id.slice(1, 2) - 1) {
-        levelIndex.value = 0
-        userDishEditInput.value.windows_id = options[canteenIndex.value].level[levelIndex.value].windows[0].windows_id
-    }
-    console.log(userDishEditInput.value.windows_id)
+    levelIndex.value = 0
     let i = -1
     return options[canteenIndex.value].level.map(a => {
         i++
@@ -70,7 +57,10 @@ const levelList = computed(() => {
         }
     })
 })
+
+levelIndex.value = options[canteenIndex.value].level.findIndex(a => a.level_num === Number(userDishAddInput.value.windows_id.slice(2, 4)))
 const windowsList = computed(() => {
+    userDishAddInput.value.windows_id = options[canteenIndex.value].level[levelIndex.value].windows[0].windows_id
     return options[canteenIndex.value].level[levelIndex.value].windows.map(a => {
         return {
             value: a.windows_id,
@@ -79,16 +69,16 @@ const windowsList = computed(() => {
     })
 })
 
-const userPrimaryDishEdit = () => {
-    ElMessageBox.confirm("是否确认修改菜品信息？", "修改确认", {
+const userPrimaryDishAdd = () => {
+    ElMessageBox.confirm("是否确认添加菜品信息？", "添加确认", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
     })
         .then(
             (res) => {
-                if (!checkStatus.value){
-                    ElMessageBox.confirm("菜品名称不能为空！", "修改失败", {
+                if (!checkStatus.value) {
+                    ElMessageBox.confirm("菜品名称不能为空！", "添加失败", {
                         confirmButtonText: "确定",
                         cancelButtonText: "取消",
                         type: "warning",
@@ -98,17 +88,17 @@ const userPrimaryDishEdit = () => {
                 }
                 const loading = ElLoading.service({
                     fullscreen: true,
-                    text: "正在提交修改数据",
+                    text: "正在提交数据",
                 })
-                //pushEditData(userDishEditInput.value)
+                //pushAddData(userDishAddInput.value)
                 loading.close()
                 console.log("close then: ", res)
-                ElMessageBox.confirm("修改菜品信息成功！", "修改成功", {
+                ElMessageBox.confirm("添加菜品信息成功！", "添加成功", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
                     type: "warning",
                 })
-                editDishWindowStatus.value = false
+                addDishWindowStatus.value = false
             }
         )
         .catch((err) => {
@@ -117,7 +107,7 @@ const userPrimaryDishEdit = () => {
         })
 }
 
-const userCloseDishEditWindow = () => {
+const userCloseDishAddWindow = () => {
     console.log("close")
     ElMessageBox.confirm("数据尚未保存，是否退出？", "返回确认", {
         confirmButtonText: "确定",
@@ -125,7 +115,7 @@ const userCloseDishEditWindow = () => {
         type: "warning",
     })
         .then(() => {
-            editDishWindowStatus.value = false
+            addDishWindowStatus.value = false
         })
         .catch(() => {
             return
@@ -133,18 +123,18 @@ const userCloseDishEditWindow = () => {
 }
 
 const checkStatus = ref(true)
-function checkWarnAdd () {
+function checkWarnAdd() {
     checkStatus.value = false
     let i = document.getElementById("nameJS")
     i.classList.add("name")
 }
-function checkWarnRemove () {
+function checkWarnRemove() {
     checkStatus.value = true
     let i = document.getElementById("nameJS")
     i.classList.remove("name")
 }
 
-function inputNesCheck (e) {
+function inputNesCheck(e) {
     let value = e.target.value
     console.log(value)
     if (value === "") {
@@ -158,20 +148,20 @@ function inputNesCheck (e) {
 
 <template>
     <div class="dialog">
-        <el-dialog v-model="editDishWindowStatus" :show-close="false" align-center :close-on-click-modal="false"
+        <el-dialog v-model="addDishWindowStatus" :show-close="false" align-center :close-on-click-modal="false"
             append-to-body>
             <template #header>
-                <div flex items-center h="full" bg-yellow-5><span c-white m-3>修改菜品信息</span></div>
+                <div flex items-center h="full" bg-yellow-5><span c-white m-3>添加菜品信息</span></div>
             </template>
             <el-container>
                 <el-main style="overflow-x: hidden;">
                     <div m-5 flex flex-row style="width: 100%;">
-                        <div grow><span>uid：</span><span>{{ windowsMessage.dish_id }}</span></div>
-                        <div grow id="nameJS"><span>名称：</span><el-input  @focus="checkWarnRemove" @blur="inputNesCheck" v-model="userDishEditInput.dish_name" /></div>
+                        <div grow id="nameJS"><span>名称：</span><el-input @focus="checkWarnRemove" @blur="inputNesCheck"
+                                v-model="userDishAddInput.dish_name" /></div>
                         <div grow flex flex-row><span>时间：</span>
-                            <el-checkbox v-model="userDishEditInput.date.morning" label="早"></el-checkbox>
-                            <el-checkbox v-model="userDishEditInput.date.noon" label="中"></el-checkbox>
-                            <el-checkbox v-model="userDishEditInput.date.night" label="晚"></el-checkbox>
+                            <el-checkbox v-model="userDishAddInput.date.morning" label="早"></el-checkbox>
+                            <el-checkbox v-model="userDishAddInput.date.noon" label="中"></el-checkbox>
+                            <el-checkbox v-model="userDishAddInput.date.night" label="晚"></el-checkbox>
                         </div>
                     </div>
                     <div m-5 flex style="width: 100%;">
@@ -191,14 +181,14 @@ function inputNesCheck (e) {
                         </div>
                         <div grow>
                             <span>窗口号：</span>
-                            <el-select v-model="userDishEditInput.windows_id">
+                            <el-select v-model="userDishAddInput.windows_id">
                                 <el-option v-for="item in windowsList" :key="item.value" :label="item.label"
                                     :value="item.value" />
                             </el-select>
                         </div>
                     </div>
                     <div m-5 flex style="width: 100%;">
-                        <div grow><span>清真：</span><el-checkbox v-model="userDishEditInput.muslim"></el-checkbox></div>
+                        <div grow><span>清真：</span><el-checkbox v-model="userDishAddInput.muslim"></el-checkbox></div>
                     </div>
                     <div m-5 flex style="width: 100%;">
                         <div grow flex flex-row>
@@ -208,21 +198,22 @@ function inputNesCheck (e) {
                         </div>
                     </div>
                     <div m-5 flex style="width: 100%;">
-                        <div grow flex flex-row><span>图片：</span>
-                            <DishUpload :picture-url="userDishEditInput.picture" @update:picture-url="(i)=>userDishEditInput.picture = i" />
+                        <div grow flex flex-row>
+                            <span>展示图片：</span>
+                            <DishUpload :picture-url="userDishAddInput.picture" @update:picture-url="(i)=>userDishAddInput.picture = i" />
                         </div>
                     </div>
                     <div m-5 flex style="width: 100%;">
                         <div grow flex flex-row><span>备用图片：</span>
-                            <DishUpload :picture-url="userDishEditInput.sparePicture" @update:picture-url='(i)=>userDishEditInput.sparePicture = i' />
+                            <DishUpload :picture-url="userDishAddInput.sparePicture" @update:picture-url='(i)=>userDishAddInput.sparePicture = i' />
                         </div>
                     </div>
                     <div>
                         <div flex-row w="full">
                             <div grow></div>
                             <div grow>
-                                <el-button @click="userPrimaryDishEdit">修改</el-button>
-                                <el-button @click="userCloseDishEditWindow">返回</el-button>
+                                <el-button @click="userPrimaryDishAdd">修改</el-button>
+                                <el-button @click="userCloseDishAddWindow">返回</el-button>
                             </div>
                             <div grow></div>
                         </div>
@@ -281,7 +272,8 @@ function inputNesCheck (e) {
 .yellow {
     background-color: #E6A23C;
 }
-.name :deep(.el-input__wrapper){
+
+.name :deep(.el-input__wrapper) {
     box-shadow: red 0px 0px 0px 1px inset !important;
 }
 </style>

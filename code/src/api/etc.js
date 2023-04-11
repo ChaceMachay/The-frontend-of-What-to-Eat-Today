@@ -1,14 +1,19 @@
-import { onKeyDown } from "@vueuse/core";
-import { windowsMessage, canteenWindowStatus, dishWindowStatus } from "../status/data" 
-
 export function convertToChinaNum(num) {
     var arr1 = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
-    var arr2 = ['', '十', '百', '千', '万', '十', '百', '千', '亿', '十', '百', '千','万', '十', '百', '千','亿'];//可继续追加更高位转换值
-    if(!num || isNaN(num)){
-        return "零";
-    }
+    var arr2 = ['', '十', '百', '千', '万', '十', '百', '千', '亿', '十', '百', '千','万', '十', '百', '千','亿'];
+    var arr3 = ['第', '负']//可继续追加更高位转换值
     var english = num.toString().split("")
     var result = "";
+    var sign = ''
+    if (english[0] === '-'){
+        english = english.slice(1)
+        sign = arr3[1]
+    }
+    else {
+        sign = arr3[0]
+    }
+
+    console.log(sign , english)
     for (var i = 0; i < english.length; i++) {
         var des_i = english.length - 1 - i;//倒序排列设值
         result = arr2[i] + result;
@@ -33,17 +38,7 @@ export function convertToChinaNum(num) {
         {
             result = result.substring(1)
         }
-    return result
-}
-
-export const closeWindows = (done)=>{
-    canteenWindowStatus.value = false
-    dishWindowStatus.value = false
-
-    windowsMessage.value = null
-    
-    console.log("ok")
-    return done
+    return sign + result
 }
 
 export const showDishDateChinese = (obj) => {

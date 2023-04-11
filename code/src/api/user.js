@@ -1,3 +1,4 @@
+import axios from "axios"
 
 import { getUserLoginInformation } from "./storage"
 import { http } from "../utils/http"
@@ -12,26 +13,28 @@ const user = getUserLoginInformation()
 
 // 登录，成功返回数据，失败返回错误信息
 
-export const userLogin = async ({ userAccount, userPassword }) => {
-    // return await http
-    //     .post('/login', { userAccount, userPassword })
-    //     .then(res => res.data)
-    //     .catch(err => err)
-
-
-    // test return
-    return {
-        "userName": "test userName",
-        "accessToken": "test accessToken",
-    }
+export const userLogin = async (a) => {
+    return await http({
+        method: 'post',
+        url: '/background/managers/login',
+        data: a,
+    })
+        .then(res => {
+            console.log(res)
+            return res
+        })
+        .catch(err => {
+            console.log(err)
+            return err
+        })
 }
 
 // 登出
 
 export const userLogout = () => {
-    user.value.userLoginStatus = 0 
+    user.value.userLoginStatus = 0
     user.value.accessToken = null
     alert("您已退出登录")
-} 
+}
 
 

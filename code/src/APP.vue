@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from "vue"
 
-import Login from "./pages/Login.vue"
-import Work from "./pages/Work.vue"
+import Login from "./pages/login.vue"
+import Work from "./pages/work.vue"
 
 import { getUserLoginInformation } from "./api/storage";
 

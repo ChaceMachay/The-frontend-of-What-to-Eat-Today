@@ -1,12 +1,13 @@
 <script setup>
-import { ref, defineProps } from 'vue'
+import { defineProps } from 'vue'
 
-import { windowsMessage, showWindowStatus, editWindowStatus, windowStatus, canteenWindowStatus, dishWindowStatus } from '../status/data'
+import { windowsMessage, windowStatus } from '../status/data'
+import { showCanteenWindowStatus, editCanteenWindowStatus } from '../status/data'
+import { showDishWindowStatus, editDishWindowStatus } from '../status/data'
+
 
 import { deleteCanteen } from './canteen/CanteenDelete'
 import { deleteDish } from './dish/DishDelete'
-
-
 
 const props = defineProps(['item', 'type'])
 
@@ -20,14 +21,12 @@ const showItem = () => {
         return
     }
     if (props.type === "canteen") {
-        canteenWindowStatus.value = true
+        showCanteenWindowStatus.value = true
         windowsMessage.value = props.item
-        showWindowStatus.value = true
     }
     else if (props.type === "dish") {
-        dishWindowStatus.value = true
+        showDishWindowStatus.value = true
         windowsMessage.value = props.item
-        showWindowStatus.value = true
     }
     else {
         console.log("undefined type props.")
@@ -38,23 +37,22 @@ const showItem = () => {
 
 const editItem = () => {
     if (windowStatus.value) {
+        console.log("windowStatus.value is true", editCanteenWindowStatus.value, editDishWindowStatus.value)
         return
     }
     if (props.type === "canteen") {
-        canteenWindowStatus.value = true
+        editCanteenWindowStatus.value = true
         windowsMessage.value = props.item
-        editWindowStatus.value = true
     }
     else if (props.type === "dish") {
-        dishWindowStatus.value = true
+        editDishWindowStatus.value = true
         windowsMessage.value = props.item
-        editWindowStatus.value = true
     }
     else {
         console.log("undefined type props.")
         alert("系统版本过低，请更新系统后重试。")
     }
-    console.log("editItem was called, and it message is: ",'1' ,windowsMessage.value,'2' ,canteenWindowStatus.value,'3' ,dishWindowStatus.value)
+    console.log("editItem was called, and it message is: ",'1' ,windowsMessage.value,'2', editCanteenWindowStatus.value, '3', editDishWindowStatus.value)
 }
 
 const deleteItem = () => {
