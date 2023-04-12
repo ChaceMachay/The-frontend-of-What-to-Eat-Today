@@ -1,39 +1,31 @@
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import {
-  showCanteenWindowStatus,
-  editCanteenWindowStatus,
-  addCanteenWindowStatus,
-  windowStatus,
-  canteenInformation,
-  nowCanteenPage,
-} from "../status/data";
+import { ref} from "vue"
+import { useRouter } from "vue-router"
+import { showCanteenWindowStatus, editCanteenWindowStatus,addCanteenWindowStatus, windowStatus,
+    canteenInformation, nowCanteenPage} from "../status/data"
 
-import {
-  initialCanteenManangeInformation,
-  nextPage,
-  lastPage,
-} from "../api/canteen";
+import { initialCanteenManangeInformation,nextPage,lastPage } from "../api/canteen"
 
-import CanteenShow from "../components/canteen/CanteenShow.vue";
-import CanteenEdit from "../components/canteen/CanteenEdit.vue";
-import CanteenAdd from "../components/canteen/CanteenAdd.vue";
-import Operations from "../components/Operations.vue";
 
-const router = useRouter();
-const userSearchInput = ref("");
+import CanteenShow from "../components/canteen/CanteenShow.vue"
+import CanteenEdit from "../components/canteen/CanteenEdit.vue"
+import CanteenAdd from "../components/canteen/CanteenAdd.vue"
+import Operations from "../components/Operations.vue"
+
+const router = useRouter()
+const userSearchInput = ref("")
 //const userFilterInput = ref([])
 
 const userAddCanteen = () => {
-  if (windowStatus.value) {
-    return;
-  }
-  addCanteenWindowStatus.value = true;
-};
+    if (windowStatus.value) {
+        return
+    }
+    addCanteenWindowStatus.value = true
+}
 
-nowCanteenPage.value = 1;
-initialCanteenManangeInformation();
+nowCanteenPage.value = 1
+initialCanteenManangeInformation()
+
 </script>
 
 <template>

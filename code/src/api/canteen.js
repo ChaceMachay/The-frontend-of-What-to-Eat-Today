@@ -19,7 +19,7 @@ export const initialCanteenManangeInformation = async () => {
             loading.close()
             canteenInformation.value = i
         })
-        .catch((err) => {
+        .catch(async (err) => {
             loading.close()
             ElMessageBox.confirm('获取餐厅信息失败！', '初始化失败', {
                 confirmButtonText: '确定',
@@ -37,7 +37,7 @@ export const nextPage = async () => {
         text: "正在加载",
     })
     await getCanteenInformationByPage(nowCanteenPage.value + 1, qty.value)
-        .then((i) => {
+        .then(async (i) => {
             if (i.length === 0) {
                 loading.close()
                 ElMessageBox.confirm('已经是最后一页了', '加载失败', {

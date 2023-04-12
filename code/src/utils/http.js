@@ -3,8 +3,10 @@ import axios from "axios"
 import { baseUrl } from "../status/data"
 
 import { getUserLoginInformation } from "../api/storage"
+import { useRouter } from "vue-router"
 
 const user = getUserLoginInformation()
+const router = useRouter()
 
 
 export const http = axios.create(
@@ -34,6 +36,8 @@ http.interceptors.response.use(
         else if (err.response.status === 401) {
             alert('登录失效，请重新登录')
             user.value.userLoginStatus = 0
+            router.push('/')
+
         }
         return Promise.reject(err)
     }

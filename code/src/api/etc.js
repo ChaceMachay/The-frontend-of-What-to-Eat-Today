@@ -107,7 +107,6 @@ export async function initialShareInformation() {
             options.value = i
         })
         .catch((err) => {
-            loading.close()
             ElMessageBox.confirm('获取校区信息失败！', '初始化失败', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -121,7 +120,6 @@ export async function initialShareInformation() {
             windowsList.value = i
         })
         .catch((err) => {
-            loading.close()
             ElMessageBox.confirm('获取窗口信息失败！', '初始化失败', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',

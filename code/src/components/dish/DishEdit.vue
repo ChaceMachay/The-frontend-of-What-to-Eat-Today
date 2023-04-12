@@ -1,244 +1,228 @@
 <script setup>
-import { ref, computed } from "vue";
-import { isNumber, range } from "lodash";
+import { ref, computed } from "vue"
+import { isNumber, range } from 'lodash'
 
-import {
-  windowsMessage,
-  editDishWindowStatus,
-  checkPriceByInput,
-  checkPriceByBlur,
-  windowsList,
-} from "../../status/data.js";
-import { convertToChinaNum, copy } from "../../api/etc.js";
+import { windowsMessage, editDishWindowStatus, checkPriceByInput, checkPriceByBlur, windowsList } from "../../status/data.js"
+import { convertToChinaNum, copy } from "../../api/etc.js"
 
-import DishUpload from "./DishUpload.vue";
+import DishUpload from "./DishUpload.vue"
 
-import { initialdishManangeInformation, pushEditData } from "../../api/dish";
+import { initialdishManangeInformation, pushEditData } from "../../api/dish"
 
-const labelList = ref([
-  { labelName: "汤类", labelClass: "green" },
-  { labelName: "辣", labelClass: "red" },
-  { labelName: "+", labelClass: "yellow" },
-]);
+const labelList = ref([{ 'labelName': '汤类', "labelClass": "green" }, { "labelName": '辣', "labelClass": "red" }, { "labelName": "+", "labelClass": "yellow" }])
 
 const userDishEditInput = ref({
-  dish_name: "红烧兔头",
-  dish_id: "010101001",
-  muslim: false,
-  windows_id: "010101",
-  price: "0",
-  picture: "/static/1681088941.490633.jpg",
-  sparePicture: "",
-  date: {
-    morning: false,
-    noon: false,
-    night: false,
-  },
-});
+    "dish_name": "菜名",
+    "dish_id": "010101001",
+    "muslim": false,
+    "windows_id": "010101",
+    'price': '0',
+    "picture": "/static/1681088941.490633.jpg",
+    "sparePicture": "",
+    'date': {
+        "morning": false,
+        "noon": false,
+        "night": false,
+    },
+})
 
 const finalSet = () => {
-  let u = {};
-  u["dish_message"] = {};
-  userDishEditInput.value["photos"] = userDishEditInput.value.picture;
-  delete userDishEditInput.value.picture;
-  userDishEditInput.value["spare_photos"] =
-    userDishEditInput.value.sparePicture;
-  delete userDishEditInput.value.sparePicture;
-  userDishEditInput.value.price *= 1;
-  userDishEditInput.value["name"] = userDishEditInput.value.dish_name;
-  delete userDishEditInput.value.dish_name;
-  delete userDishEditInput.value.windows_name;
-  const { morning, noon, night } = userDishEditInput.value.date;
-  userDishEditInput.value["morning"] = morning;
-  userDishEditInput.value["noon"] = noon;
-  userDishEditInput.value["night"] = night;
-  delete userDishEditInput.value.date;
-  userDishEditInput.value["canteen_id"] =
-    userDishEditInput.value.windows_id.slice(0, 2);
-  userDishEditInput.value["level"] =
-    userDishEditInput.value.windows_id.slice(2, 4)[0] === "0"
-      ? userDishEditInput.value.windows_id.slice(2, 4)[1] * 1
-      : userDishEditInput.value.windows_id.slice(2, 4)[0] * -1;
-  userDishEditInput.value["window"] =
-    userDishEditInput.value.windows_id.slice(4, 6) * 1;
-  delete userDishEditInput.value.windows_id;
-  u["dish_message"] = copy(userDishEditInput.value);
-  u["dish_id"] = userDishEditInput.value.dish_id;
-  userDishEditInput.value = copy(u);
-};
+    let u = {}
+    u['dish_message'] = {}
+    userDishEditInput.value['photos'] = userDishEditInput.value.picture
+    delete userDishEditInput.value.picture
+    userDishEditInput.value['spare_photos'] = userDishEditInput.value.sparePicture
+    delete userDishEditInput.value.sparePicture
+    userDishEditInput.value.price *= 1
+    userDishEditInput.value['name'] = userDishEditInput.value.dish_name
+    delete userDishEditInput.value.dish_name
+    delete userDishEditInput.value.windows_name
+    const { morning, noon, night } = userDishEditInput.value.date
+    userDishEditInput.value['morning'] = morning
+    userDishEditInput.value['noon'] = noon
+    userDishEditInput.value['night'] = night
+    delete userDishEditInput.value.date
+    userDishEditInput.value['canteen_id'] = userDishEditInput.value.windows_id.slice(0, 2)
+    userDishEditInput.value['level'] = userDishEditInput.value.windows_id.slice(2, 4)[0] === '0' ? userDishEditInput.value.windows_id.slice(2, 4)[1] * 1 : userDishEditInput.value.windows_id.slice(2, 4)[0] * -1
+    userDishEditInput.value['window'] = userDishEditInput.value.windows_id.slice(4, 6) * 1
+    delete userDishEditInput.value.windows_id
+    u['dish_message'] = copy(userDishEditInput.value)
+    u['dish_id'] = userDishEditInput.value.dish_id
+    userDishEditInput.value = copy(u)
+    
+}
 
-userDishEditInput.value = JSON.parse(JSON.stringify(windowsMessage.value));
+userDishEditInput.value = JSON.parse(JSON.stringify(windowsMessage.value))
 
 const canteenList = computed(() => {
-  let i = 0;
-  return windowsList.value.map((a) => {
-    return {
-      value: i++,
-      label: a.canteen_name,
-    };
-  });
-});
+    let i = 0
+    return windowsList.value.map(a => {
+        return {
+            value: i++,
+            label: a.canteen_name
+        }
+    })
+})
 
-const canteenIndex = ref(0);
-const levelIndex = ref(0);
 
-let canteenIndexSrc = windowsList.value.findIndex(
-  (a) => a.canteen_id === windowsMessage.value.windows_id.slice(0, 2)
-);
-let levelIndexSrc = windowsList.value[
-  canteenIndexSrc
-].levels_information.findIndex((a) => a.level === windowsMessage.value.level);
+const canteenIndex = ref(0)
+const levelIndex = ref(0)
 
-canteenIndex.value = canteenIndexSrc;
-levelIndex.value = levelIndexSrc;
+let canteenIndexSrc = windowsList.value.findIndex(a => a.canteen_id === windowsMessage.value.windows_id.slice(0, 2))
+let levelIndexSrc = windowsList.value[canteenIndexSrc].levels_information.findIndex(a => a.level === windowsMessage.value.level)
+
+canteenIndex.value = canteenIndexSrc
+levelIndex.value = levelIndexSrc
 
 const levelList = computed(() => {
-  if (
-    canteenIndex.value !==
-    userDishEditInput.value.windows_id.slice(1, 2) * 1
-  ) {
-    levelIndex.value = 0;
-    userDishEditInput.value.windows_id =
-      windowsList.value[
-        canteenIndex.value
-      ].levels_information[0].windows_information[0].window_id;
-  }
-  let i = -1;
-  return windowsList.value[canteenIndex.value].levels_information.map((a) => {
-    i++;
-    return {
-      value: i,
-      label: convertToChinaNum(a.level) + "层",
-    };
-  });
-});
+    if (canteenIndex.value !== userDishEditInput.value.windows_id.slice(1, 2) * 1) {
+        levelIndex.value = 0
+        userDishEditInput.value.windows_id = windowsList.value[canteenIndex.value].levels_information[0].windows_information[0].window_id
+    }
+    let i = -1
+    return windowsList.value[canteenIndex.value].levels_information.map(a => {
+        i++
+        return {
+            value: i,
+            label: convertToChinaNum(a.level) + '层'
+        }
+    })
+})
 const windowList = computed(() => {
-  return windowsList.value[canteenIndex.value].levels_information[
-    levelIndex.value
-  ].windows_information.map((a) => {
-    return {
-      value: a.window_id,
-      label: a.window + "号窗口",
-    };
-  });
-});
+    return windowsList.value[canteenIndex.value].levels_information[levelIndex.value].windows_information.map(a => {
+        return {
+            value: a.window_id,
+            label: a.window + '号窗口'
+        }
+    })
+})
+
 
 const userPrimaryDishEdit = () => {
-  ElMessageBox.confirm("是否确认修改菜品信息？", "修改确认", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-  })
-    .then(async () => {
-      if (!checkStatus.value) {
-        ElMessageBox.confirm("菜品名称不能为空！", "修改失败", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        });
-        checkWarnedit();
-        return;
-      }
-      const loading = ElLoading.service({
-        fullscreen: true,
-        text: "正在提交数据",
-      });
-      finalSet();
-      await pushEditData(userDishEditInput.value)
-        .then(async (res) => {
-          if (res.status !== 200) {
-            ElMessageBox.confirm("修改菜品失败！", "修改失败", {
-              confirmButtonText: "确定",
-              cancelButtonText: "取消",
-              type: "warning",
-            });
-            editDishWindowStatus.value = false;
-          } else {
-            loading.close();
-            await ElMessageBox.confirm("修改餐厅成功！", "修改成功", {
-              confirmButtonText: "确定",
-              cancelButtonText: "取消",
-              type: "warning",
-            });
-            editDishWindowStatus.value = false;
-          }
+    ElMessageBox.confirm("是否确认修改菜品信息？", "修改确认", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+    })
+        .then(
+            async () => {
+                if (!checkStatus.value) {
+                    ElMessageBox.confirm("菜品名称不能为空！", "修改失败", {
+                        confirmButtonText: "确定",
+                        cancelButtonText: "取消",
+                        type: "warning",
+                    })
+                    checkWarnedit()
+                    return
+                }
+                const loading = ElLoading.service({
+                    fullscreen: true,
+                    text: "正在提交数据",
+                })
+                finalSet()
+                await pushEditData(userDishEditInput.value)
+                    .then(async (res) => {
+                        if (res.status !== 200) {
+                            console.warn(res)
+                            ElMessageBox.confirm("修改菜品失败！", "修改失败", {
+                                confirmButtonText: "确定",
+                                cancelButtonText: "取消",
+                                type: "warning",
+                            })
+                            editDishWindowStatus.value = false
+
+                        } else {
+                            await ElMessageBox.confirm("修改餐厅成功！", "修改成功", {
+                                confirmButtonText: "确定",
+                                cancelButtonText: "取消",
+                                type: "warning",
+                            })
+                            
+                            loading.close()
+                            editDishWindowStatus.value = false
+
+                        }
+                    })
+                    .catch(async (err) => {
+                        console.warn(err)
+                        await ElMessageBox.confirm("修改菜品失败！", "修改失败", {
+                            confirmButtonText: "确定",
+                            cancelButtonText: "取消",
+                            type: "warning",
+                        })
+                        loading.close()
+                        editDishWindowStatus.value = false
+
+                    })
+            })
+        .catch((i) => {
+            console.warn(i)
+            editDishWindowStatus.value = false
         })
-        .catch(async (err) => {
-          console.warn(err);
-          await ElMessageBox.confirm("修改菜品失败！", "修改失败", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-          });
-          loading.close();
-          editDishWindowStatus.value = false;
-        });
-    })
-    .catch(() => {
-      editDishWindowStatus.value = false;
-    })
-    .finally(() => {
-      initialdishManangeInformation();
-    });
-};
+        .finally(() => {
+            initialdishManangeInformation()
+        })
+}
 
 const userCloseDishEditWindow = () => {
-  ElMessageBox.confirm("数据尚未保存，是否退出？", "返回确认", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-  })
-    .then(() => {
-      editDishWindowStatus.value = false;
+    ElMessageBox.confirm("数据尚未保存，是否退出？", "返回确认", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
     })
-    .catch(() => {
-      return;
-    });
-};
+        .then(() => {
+            editDishWindowStatus.value = false
+        })
+        .catch(() => {
+            return
+        })
+}
 
-const checkStatus = ref(true);
+const checkStatus = ref(true)
 function checkWarnedit() {
-  checkStatus.value = false;
-  let i = document.getElementById("nameJS");
-  i.classList.edit("name");
+    checkStatus.value = false
+    let i = document.getElementById("nameJS")
+    i.classList.edit("name")
 }
 function checkWarnRemove() {
-  checkStatus.value = true;
-  let i = document.getElementById("nameJS");
-  i.classList.remove("name");
+    checkStatus.value = true
+    let i = document.getElementById("nameJS")
+    i.classList.remove("name")
 }
 
 function inputNesCheck(e) {
-  let value = e.target.value;
-  if (value === "") {
-    checkWarnedit();
-  } else {
-    checkWarnRemove();
-  }
+    let value = e.target.value
+    if (value === "") {
+        checkWarnedit()
+    } else {
+        checkWarnRemove()
+    }
 }
 
-const userLastInput = ref(["0"]);
+const userLastInput = ref(['0'])
 
 function inputPriceNumCheck() {
-  if (checkPriceByBlur.test(userDishEditInput.value.price)) {
-    userDishEditInput.value.price =
-      userDishEditInput.value.price === "" ? 0 : userDishEditInput.value.price;
+    if (checkPriceByBlur.test(userDishEditInput.value.price)) {
+        userDishEditInput.value.price = userDishEditInput.value.price === '' ? 0 : userDishEditInput.value.price
 
-    userLastInput.value[0] = userDishEditInput.value.price;
-  } else if (!checkPriceByBlur.test(userDishEditInput.value.price)) {
-    userDishEditInput.value.price = userLastInput.value[0];
-  }
+        userLastInput.value[0] = userDishEditInput.value.price
+    }
+    else if (!checkPriceByBlur.test(userDishEditInput.value.price)) {
+        userDishEditInput.value.price = userLastInput.value[0]
+    }
 }
 
 const userInputPriceCheck = () => {
-  if (checkPriceByInput.test(userDishEditInput.value.price)) {
-    if (checkPriceByBlur.test(userDishEditInput.value.price)) {
-      userLastInput.value[0] = userDishEditInput.value.price;
+    if (checkPriceByInput.test(userDishEditInput.value.price)) {
+        if (checkPriceByBlur.test(userDishEditInput.value.price)) {
+            userLastInput.value[0] = userDishEditInput.value.price
+        }
     }
-  } else if (!checkPriceByInput.test(userDishEditInput.value.price)) {
-    userDishEditInput.value.price = userLastInput.value[0];
-  }
-};
+    else if (!checkPriceByInput.test(userDishEditInput.value.price)) {
+        userDishEditInput.value.price = userLastInput.value[0]
+    }
+}
+
 </script>
 
 <template>

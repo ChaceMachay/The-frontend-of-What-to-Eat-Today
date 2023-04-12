@@ -1,46 +1,42 @@
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import {
-  showDishWindowStatus,
-  editDishWindowStatus,
-  addDishWindowStatus,
-  windowStatus,
-  nowDishPage,
-  windowsList,
-} from "../status/data";
-import { convertToChinaNum, showDishDateChinese } from "../api/etc";
-import { lastPage, nextPage } from "../api/dish";
+import { ref } from "vue"
+import { useRouter } from "vue-router"
+import { showDishWindowStatus, editDishWindowStatus, addDishWindowStatus, windowStatus, nowDishPage,windowsList } from "../status/data"
+import { convertToChinaNum, showDishDateChinese } from "../api/etc"
+import { lastPage,nextPage } from "../api/dish"
 
-import DishShow from "../components/dish/DishShow.vue";
-import DishEdit from "../components/dish/DishEdit.vue";
-import DishAdd from "../components/dish/DishAdd.vue";
-import Operations from "../components/Operations.vue";
-import { initialdishManangeInformation } from "../api/dish";
-import { dishInformation } from "../status/data";
+import DishShow from "../components/dish/DishShow.vue"
+import DishEdit from "../components/dish/DishEdit.vue"
+import DishAdd from "../components/dish/DishAdd.vue"
+import Operations from "../components/Operations.vue"
+import { initialdishManangeInformation } from "../api/dish"
+import { dishInformation } from "../status/data"
 
-const router = useRouter();
-const userSearchInput = ref("");
-const userFilterInput = ref([]);
+const router = useRouter()
+const userSearchInput = ref("")
+const userFilterInput = ref([])
 
-const search = async () => {};
+const search = async () => {
+}
 
 const userAddDish = () => {
-  if (windowStatus.value) {
-    return;
-  }
-  addDishWindowStatus.value = true;
-};
+    if (windowStatus.value) {
+        return
+    }
+    addDishWindowStatus.value = true
+}
 
-nowDishPage.value = 1;
-initialdishManangeInformation();
+
+nowDishPage.value = 1
+initialdishManangeInformation()
 
 function getIndex(arr, val) {
-  for (var i = 0; i < arr.length; i++) {
-    if (arr[i].canteen_id == val) return i;
-  }
-  return -1;
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i].canteen_id == val) return i;
+    }
+    return -1
 }
+
 </script>
 
 <template>

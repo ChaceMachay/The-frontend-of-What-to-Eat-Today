@@ -1,16 +1,16 @@
 <script setup>
-import { ref } from "vue";
-import { range } from "lodash";
+import { ref } from "vue"
+import { range } from 'lodash'
 
-import { windowsMessage, showCanteenWindowStatus } from "../../status/data.js";
-import { convertToChinaNum } from "../../api/etc.js";
+import { windowsMessage, showCanteenWindowStatus } from "../../status/data.js"
+import { convertToChinaNum } from "../../api/etc.js"
 
-const showCanteenData = ref();
-showCanteenData.value = JSON.parse(JSON.stringify(windowsMessage.value));
+const showCanteenData = ref()
+showCanteenData.value = JSON.parse(JSON.stringify(windowsMessage.value))
 
 const userCloseCanteenShowWindow = () => {
-  showCanteenWindowStatus.value = false;
-};
+    showCanteenWindowStatus.value = false
+}
 </script>
 
 <template>
