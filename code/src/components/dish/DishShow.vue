@@ -22,14 +22,14 @@ function getIndex(arr, val) {
 
 <template>
     <div class="dialog">
-        <el-dialog v-model="showDishWindowStatus" :show-close="false" align-center append-to-body>
+        <el-dialog v-model="showDishWindowStatus" :show-close="false" align-center>
             <template #header>
                 <div flex items-center h="full" bg-yellow-5><span c-white m-3>查看菜品详情</span></div>
             </template>
-            <el-container class="container">
+            <el-container class="container" m-4>
                 <el-main style="overflow-x: hidden;">
                     <div m-5 flex flex-row style="width: 100%;">
-                        <div grow><span>uid：</span><span>{{ showDishData.dish_id }}</span></div>
+                        <div grow><span>uid: </span><span>{{ showDishData.dish_id }}</span></div>
                         <div grow><span>名称：</span><span>{{ showDishData.dish_name }}</span></div>
                         <div grow><span>时间：</span><span>{{ showDishDateChinese(showDishData.date) }}</span></div>
                     </div>
@@ -43,7 +43,7 @@ function getIndex(arr, val) {
                     </div>
                     <div m-5 flex style="width: 100%;">
                         <div grow flex flex-row>
-                            <span>标签：</span>
+                            <span mt-1>标签：</span>
                             <div c-white rd m-1 v-for="item in labelList" :class="item.labelClass"><span
                                     class="label-text">{{ item.labelName }}</span></div>
                         </div>
@@ -86,12 +86,14 @@ function getIndex(arr, val) {
                         </div>
                     </div>
                     <div>
-                        <div flex-row w="full">
-                            <div grow></div>
-                            <div grow>
-                                <el-button @click="userCloseDishShowWindow">返回</el-button>
+                        <div m-1 flex style="width: 100%;">
+                            <div flex-row w="full">
+                                <div grow></div>
+                                <div grow>
+                                    <el-button @click="userCloseDishShowWindow">返回</el-button>
+                                </div>
+                                <div grow></div>
                             </div>
-                            <div grow></div>
                         </div>
                     </div>
                 </el-main>
@@ -137,5 +139,12 @@ function getIndex(arr, val) {
     height: 20vh;
     margin: 1.5vw;
     width: 35vw;
+}
+
+.dialog:deep(.el-button) {
+    color: white;
+    background-color: rgb(251, 189, 23);
+    position: relative;
+    left: 1rem;
 }
 </style>

@@ -90,15 +90,15 @@ initialCanteenManangeInformation();
     bg-yellow-5
     @click="userAddCanteen"
   >
-  <img
-      src="code\public\pics\add.png"
+  <el-avatar
+      src="/pics/add.png"
       style="
         position: relative;
         border-radius: 100%;
         width: 4rem;
         height: 4rem;
         bottom: 0rem;
-        right: 0rem;
+        right: 0rem; ;
       "
     />
   </div>
