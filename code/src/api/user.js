@@ -1,5 +1,3 @@
-import axios from "axios"
-
 import { getUserLoginInformation } from "./storage"
 import { http } from "../utils/http"
 
@@ -20,11 +18,10 @@ export const userLogin = async (a) => {
         data: a,
     })
         .then(res => {
-            console.log(res)
             return res
         })
         .catch(err => {
-            console.log(err)
+            console.error(err)
             return err
         })
 }

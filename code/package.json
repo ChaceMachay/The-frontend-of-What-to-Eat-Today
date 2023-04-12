@@ -9,21 +9,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@unocss/reset": "^0.50.6",
-    "element-plus": "^2.3.2",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.37.0",
-    "@unocss/preset-wind": "^0.50.6",
     "@vitejs/plugin-vue": "^4.1.0",
     "eslint": "^8.36.0",
     "eslint-plugin-vue": "^9.10.0",
     "lint-staged": "^13.2.0",
-    "unocss": "^0.50.6",
-    "unplugin-auto-import": "^0.15.2",
-    "unplugin-vue-components": "^0.24.1",
     "vite": "^4.2.0"
   }
 }

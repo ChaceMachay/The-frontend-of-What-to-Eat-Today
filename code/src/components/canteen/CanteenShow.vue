@@ -5,16 +5,12 @@ import { range } from 'lodash'
 import { windowsMessage, showCanteenWindowStatus } from "../../status/data.js"
 import { convertToChinaNum } from "../../api/etc.js"
 
-console.log("canteen show was loaded, and it message is: ",windowsMessage.value)
 const showCanteenData = ref()
 showCanteenData.value = JSON.parse(JSON.stringify(windowsMessage.value))
 
 const userCloseCanteenShowWindow = () => {
-            showCanteenWindowStatus.value = false
+    showCanteenWindowStatus.value = false
 }
-
-
-console.log(showCanteenData.value)
 </script>
 
 <template>

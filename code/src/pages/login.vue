@@ -8,7 +8,7 @@ import LoginForm from "../childPages/LoginForm.vue"
             <el-header p-0>
                 <div flex items-center h="full" style="background: rgb(251,189,23);" w-screen>
                     <div grow></div>
-                    <el-avatar  src="/pics/icon.jpg" />
+                    <el-avatar  src="/pics/logo.png" />
                     <span ml-2 c-white>"今天吃什么"数据管理系统</span>
                     <div grow></div>
                 </div>

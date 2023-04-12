@@ -2,21 +2,17 @@
 import { ref } from "vue"
 import { isNumber, range } from 'lodash'
 
-import { addCanteenWindowStatus, canteenWindowsLimit, canteenLevelLimit } from "../../status/data.js"
-import { getCampus } from "../../api/canteen.js"
+import { addCanteenWindowStatus, canteenWindowsLimit, canteenLevelLimit, options } from "../../status/data.js"
+import { addCanteen, initialCanteenManangeInformation } from "../../api/canteen.js"
 import { convertToChinaNum } from "../../api/etc.js"
 
-console.log("canteen add was loaded.")
-
 //   添加基本上就是修改的操作，只是初始值为0. 只有与后端交互的api名字不同，叫pushAddData(); 状态为 addWindowStatus ， 其他一致。
-
-const options = getCampus()
 
 const levelNegStatus = ref(false)
 const levelNegNum = ref(0)
 
 const userCanteenEditInput = ref({
-    campus_id: "1",
+    campus_id: 1,
     canteen_name: "齐园",
     level_num: 1,
     information: []
@@ -24,14 +20,23 @@ const userCanteenEditInput = ref({
 
 const finalSet = () => {
     let k = 0
-    userCanteenEditInput.value.information = userCanteenEditInput.value.information.slice(0, userCanteenEditInput.value.level_num)
-    userCanteenEditInput.value.information = userCanteenEditInput.value.information.map((i) => {
+    userCanteenEditInput.value['levels'] = userCanteenEditInput.value.information.slice(0, userCanteenEditInput.value.level_num)
+    delete userCanteenEditInput.value['information']
+    userCanteenEditInput.value.levels = userCanteenEditInput.value.levels.map((i) => {
         i.level = levelNegStatus.value ? (k - levelNegNum.value + (k - levelNegNum.value >= 0 ? 1 : 0)) : k + 1
         k++
-        i.information = i.information.slice(0, i.windows_num)
+        i['windows_information'] = i.information.slice(0, i.windows_num)
+        delete i['information']
+        let y = 1
+        i.windows_information = i.windows_information.map((u) => {
+            let j = new Object()
+            j['windows_name'] = u
+            j['windows'] = y
+            y++
+            return j
+        })
         return i
     })
-    console.log("final", userCanteenEditInput.value)
 }
 const initialInput = () => {
     let template = {
@@ -42,23 +47,21 @@ const initialInput = () => {
     for (let l in range(canteenWindowsLimit)) {
         template.information.push("待定")
     }
-    console.log("template: ", userCanteenEditInput.value)
     for (let m in range(canteenLevelLimit)) {
         userCanteenEditInput.value.information.push(
             JSON.parse(JSON.stringify(template))
         )
     }
-    console.log("template: ", userCanteenEditInput.value)
 }
 
-const userPrimaryCanteenEdit = () => {
+const userPrimaryCanteenEdit = async () => {
     ElMessageBox.confirm("是否确认添加餐厅信息？", "添加确认", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
     })
         .then(
-            () => {
+            async () => {
                 if (!checkStatus.value) {
                     ElMessageBox.confirm("必填项不能为空！", "添加失败", {
                         confirmButtonText: "确定",
@@ -73,21 +76,45 @@ const userPrimaryCanteenEdit = () => {
                 })
 
                 finalSet()
-                //pushAddData(userCanteenEditInput.value)
-                loading.close()
-                ElMessageBox.confirm("添加餐厅信息成功！", "添加成功", {
-                    confirmButtonText: "确定",
-                    cancelButtonText: "取消",
-                    type: "warning",
-                })
-
-                console.log(userCanteenEditInput.value)
-                addCanteenWindowStatus.value = false
-            }
-        )
-        .catch((err) => {
-            console.log("close catch", err)
-            return
+                await addCanteen(userCanteenEditInput.value)
+                    .then(async (res) => {
+                        if (res.status !== 201) {
+                            console.warn(res)
+                            loading.close()
+                            await ElMessageBox.confirm("添加餐厅信息失败！", "添加失败", {
+                                confirmButtonText: "确定",
+                                cancelButtonText: "取消",
+                                type: "warning",
+                            })
+                            addCanteenWindowStatus.value = false
+                        }
+                        else {
+                            loading.close()
+                            await ElMessageBox.confirm("添加餐厅信息成功！", "添加成功", {
+                                confirmButtonText: "确定",
+                                cancelButtonText: "取消",
+                                type: "warning",
+                            })
+                            addCanteenWindowStatus.value = false
+                        }
+                    })
+                    .catch(async (err) => {
+                        console.warn(err)
+                        await ElMessageBox.confirm("添加餐厅信息失败！", "添加失败", {
+                            confirmButtonText: "确定",
+                            cancelButtonText: "取消",
+                            type: "warning",
+                        })
+                        loading.close()
+                        addCanteenWindowStatus.value = false
+                        console.error(err)
+                    })
+            })
+        .catch(() => {
+            addCanteenWindowStatus.value = false
+        })
+        .finally(() => {
+            initialCanteenManangeInformation()
         })
 }
 
@@ -129,7 +156,6 @@ const userInputLevelCheck = (i) => {
     }
 }
 const userInputWindowsCheck = (i) => {
-    console.log("i", i, "userLastInput", userLastInput.value)
     let value = i.windows_num
     if (value > i.information.length) {
         i.windows_num = userLastInput.value[1]
@@ -142,7 +168,6 @@ const userInputWindowsCheck = (i) => {
     else {
         userLastInput.value[1] = value
     }
-    console.log("i", i)
 }
 
 const userInputLevelNegCheck = () => {
@@ -173,14 +198,11 @@ function checkWarnAdd(prop, mode = false) {
         i = document.getElementById(prop).getElementsByTagName('div')[1]
     }
     checkStatus.value = false
-    console.log("checkStatus", i)
     i.classList.add("warn")
-    console.log("checkStatus", i)
 }
 function checkWarnRemove(prop, mode = false, value) {
     if (value) {
         userLastInput.value[1] = value
-        console.log("userLastInput", userLastInput.value)
     }
     let i = null
     if (mode) {
@@ -191,18 +213,15 @@ function checkWarnRemove(prop, mode = false, value) {
     }
     checkStatus.value = true
     i.classList.remove("warn")
-    console.log("checkStatus", i.classList)
 }
 
 function inputNesCheck(e) {
     let value = e.target.value
-    console.log("hao123", value)
     if (value === "") {
         checkWarnAdd(document.getElementById(e.target.id).parentNode.parentNode, true)
     } else {
         checkWarnRemove(document.getElementById(e.target.id).parentNode.parentNode, true)
     }
-    console.log("checkStatus", document.getElementById(e.target.id).parentNode.parentNode.classList)
 }
 
 function inputLevelNegNumCheck() {
@@ -223,14 +242,14 @@ initialInput()
                 <el-main style="overflow-x: hidden;overflow-y:auto;">
                     <div m-5 flex flex-row style="width: 100%;">
                         <div grow flex flex-row>
-                            <span>校区：</span>
+                            <span>校区： </span>
                             <el-select v-model="userCanteenEditInput.campus_id" size="large">
                                 <el-option v-for="item in options" :key="item.campus_id" :label="item.campus_name"
                                     :value="item.campus_id" />
                             </el-select>
                         </div>
                         <div grow flex flex-row id="canteenName"><span>名称：</span>
-                            <el-input @focus="checkWarnRemove('canteenName')" @blur="inputNesCheck"
+                            <el-input maxlength="10" @focus="checkWarnRemove('canteenName')" @blur="inputNesCheck"
                                 v-model="userCanteenEditInput.canteen_name" />
                         </div>
                     </div>
@@ -271,14 +290,14 @@ initialInput()
                             v-for="j in range((userCanteenEditInput.information[i].windows_num + (userCanteenEditInput.information[i].windows_num) % 2) / 2)">
                             <div flex flex-row>
                                 <div grow mt-5 mb-5 flex flex-row :id="'windows' + ('' + i) + ('' + j * 2 + 1)">
-                                    <span>{{ j * 2 + 1 }}号窗口名称：<el-input
+                                    <span>{{ j * 2 + 1 }}号窗口名称：<el-input maxlength="10"
                                             @focus="checkWarnRemove('windows' + ('' + i) + ('' + j * 2 + 1))"
                                             @blur="inputNesCheck"
                                             v-model="userCanteenEditInput.information[i].information[j * 2]" /></span>
                                 </div>
                                 <div grow mt-5 mb-5 flex flex-row :id="'windows' + ('' + i) + ('' + j * 2 + 2)" v-if="((j + 1) < ((userCanteenEditInput.information[i].windows_num + userCanteenEditInput.information[i].windows_num % 2) / 2))
                                     || !(userCanteenEditInput.information[i].windows_num % 2)">
-                                    <span>{{ j * 2 + 2 }}号窗口名称：<el-input
+                                    <span>{{ j * 2 + 2 }}号窗口名称：<el-input maxlength="10"
                                             @focus="checkWarnRemove('windows' + ('' + i) + ('' + j * 2 + 2))"
                                             @blur="inputNesCheck"
                                             v-model="userCanteenEditInput.information[i].information[j * 2 + 1]" /></span>

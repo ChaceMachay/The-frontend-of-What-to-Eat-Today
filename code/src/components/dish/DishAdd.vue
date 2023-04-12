@@ -1,18 +1,13 @@
 <script setup>
 import { ref, computed } from "vue"
 
-import { addDishWindowStatus } from "../../status/data.js"
-//import { getWindows } from "../../api/dish.js"
-import { showDishDateChinese } from "../../api/etc.js"
-
-
-import { getWindows} from "../../test/api/dish.js"
+import { addDishWindowStatus, checkPriceByBlur, checkPriceByInput, windowsList } from "../../status/data.js"
+import { convertToChinaNum} from "../../api/etc.js"
 
 import DishUpload from "./DishUpload.vue"
+import { addDish, initialdishManangeInformation } from "../../api/dish"
 
 const url = 'https://0nlinetek-eat.azurewebsites.net'
-
-const options = getWindows()
 
 const labelList = ref([{ 'labelName': '汤类', "labelClass": "green" }, { "labelName": '辣', "labelClass": "red" }, { "labelName": "+", "labelClass": "yellow" }])
 
@@ -20,7 +15,8 @@ const userDishAddInput = ref({
     "dish_name": "待定",
     "muslim": false,
     "windows_id": "110101",
-    "label": [],
+    'level': 1,
+    'price': '0',
     "picture": "",
     "sparePicture": "",
     'date': {
@@ -34,7 +30,7 @@ const userDishAddInput = ref({
 
 const canteenList = computed(() => {
     let i = 0
-    return options.map(a => {
+    return windowsList.value.map(a => {
         return {
             value: i++,
             label: a.canteen_name
@@ -44,39 +40,63 @@ const canteenList = computed(() => {
 
 const canteenIndex = ref(0)
 const levelIndex = ref(0)
-canteenIndex.value = userDishAddInput.value.windows_id.slice(1, 2) - 1
+
+
+userDishAddInput.value.windows_id = windowsList.value[0].levels_information[0].windows_information[0].window_id
+let canteenIndexSrc = windowsList.value.findIndex(a => a.canteen_id === userDishAddInput.value.windows_id.slice(0, 2))
+let levelIndexSrc = windowsList.value[canteenIndexSrc].levels_information.findIndex(a => a.level === userDishAddInput.value.level)
+canteenIndex.value = canteenIndexSrc
+levelIndex.value = levelIndexSrc
 
 const levelList = computed(() => {
-    levelIndex.value = 0
+    if (canteenIndex.value !== userDishAddInput.value.windows_id.slice(1, 2) * 1) {
+        levelIndex.value = 0
+        userDishAddInput.value.windows_id = windowsList.value[canteenIndex.value].levels_information[0].windows_information[0].window_id
+    }
     let i = -1
-    return options[canteenIndex.value].level.map(a => {
+    return windowsList.value[canteenIndex.value].levels_information.map(a => {
         i++
         return {
             value: i,
-            label: a.level_num
+            label: convertToChinaNum(a.level) + '层'
         }
     })
 })
-
-levelIndex.value = options[canteenIndex.value].level.findIndex(a => a.level_num === Number(userDishAddInput.value.windows_id.slice(2, 4)))
-const windowsList = computed(() => {
-    userDishAddInput.value.windows_id = options[canteenIndex.value].level[levelIndex.value].windows[0].windows_id
-    return options[canteenIndex.value].level[levelIndex.value].windows.map(a => {
+const windowList = computed(() => {
+    return windowsList.value[canteenIndex.value].levels_information[levelIndex.value].windows_information.map(a => {
         return {
-            value: a.windows_id,
-            label: a.windows_num
+            value: a.window_id,
+            label: a.window + '号窗口'
         }
     })
 })
+const finalSet = () => {
 
-const userPrimaryDishAdd = () => {
+    userDishAddInput.value.price *= 1
+    userDishAddInput.value['name'] = userDishAddInput.value.dish_name
+    delete userDishAddInput.value.dish_name
+    userDishAddInput.value['photos'] = userDishAddInput.value.picture
+    delete userDishAddInput.value.picture
+    userDishAddInput.value['spare_photos'] = userDishAddInput.value.sparePicture
+    delete userDishAddInput.value.sparePicture 
+    userDishAddInput.value['morning'] = userDishAddInput.value.date.morning
+    userDishAddInput.value['noon'] = userDishAddInput.value.date.noon
+    userDishAddInput.value['night'] = userDishAddInput.value.date.night
+    delete userDishAddInput.value.date
+    userDishAddInput.value['canteen_id'] = userDishAddInput.value.windows_id.slice(0, 2)
+    userDishAddInput.value['level'] = userDishAddInput.value.windows_id.slice(2, 4)[0] === '0' ? userDishAddInput.value.windows_id.slice(2, 4)[1]*1 : userDishAddInput.value.windows_id.slice(2, 4)[0]*-1
+    userDishAddInput.value['window'] = userDishAddInput.value.windows_id.slice(4, 6)*1
+    delete userDishAddInput.value.windows_id
+}
+
+const userPrimaryDishAdd = async() => {
     ElMessageBox.confirm("是否确认添加菜品信息？", "添加确认", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
     })
         .then(
-            (res) => {
+            async () => {
                 if (!checkStatus.value) {
                     ElMessageBox.confirm("菜品名称不能为空！", "添加失败", {
                         confirmButtonText: "确定",
@@ -90,25 +110,49 @@ const userPrimaryDishAdd = () => {
                     fullscreen: true,
                     text: "正在提交数据",
                 })
-                //pushAddData(userDishAddInput.value)
-                loading.close()
-                console.log("close then: ", res)
-                ElMessageBox.confirm("添加菜品信息成功！", "添加成功", {
-                    confirmButtonText: "确定",
-                    cancelButtonText: "取消",
-                    type: "warning",
-                })
-                addDishWindowStatus.value = false
-            }
-        )
-        .catch((err) => {
-            console.log("close catch", err)
-            return
+                finalSet()
+                await addDish(userDishAddInput.value)
+                    .then(async (res)=>{
+                        if (res.status !== 201) {
+                            ElMessageBox.confirm("添加菜品失败！", "添加失败", {
+                                confirmButtonText: "确定",
+                                cancelButtonText: "取消",
+                                type: "warning",
+                            })
+                            console.warn(res)
+                            addDishWindowStatus.value = false
+
+                        } else {
+                            loading.close()
+                            await ElMessageBox.confirm("添加餐厅成功！", "添加成功", {
+                                confirmButtonText: "确定",
+                                cancelButtonText: "取消",
+                                type: "warning",
+                            })
+                            addDishWindowStatus.value = false
+                        }
+                    })
+                    .catch(async (err)=>{
+                        console.warn(err)
+                        await ElMessageBox.confirm("添加菜品失败！", "添加失败", {
+                            confirmButtonText: "确定",
+                            cancelButtonText: "取消",
+                            type: "warning",
+                        })
+                        loading.close()
+                        addDishWindowStatus.value = false
+
+                    })
+            })
+        .catch(() => {
+            addDishWindowStatus.value = false
+        })
+        .finally(() => {
+            initialdishManangeInformation()
         })
 }
 
 const userCloseDishAddWindow = () => {
-    console.log("close")
     ElMessageBox.confirm("数据尚未保存，是否退出？", "返回确认", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -136,13 +180,37 @@ function checkWarnRemove() {
 
 function inputNesCheck(e) {
     let value = e.target.value
-    console.log(value)
     if (value === "") {
         checkWarnAdd()
     } else {
         checkWarnRemove()
     }
 }
+
+const userLastInput = ref(['0'])
+
+function inputPriceNumCheck() {
+    if (checkPriceByBlur.test(userDishAddInput.value.price)) {
+        userDishAddInput.value.price = userDishAddInput.value.price === '' ? 0 : userDishAddInput.value.price
+
+        userLastInput.value[0] = userDishAddInput.value.price
+    }
+    else if (!checkPriceByBlur.test(userDishAddInput.value.price)) {
+        userDishAddInput.value.price = userLastInput.value[0]
+    }
+}
+
+const userInputPriceCheck = () => {
+    if (checkPriceByInput.test(userDishAddInput.value.price)) {
+        if (checkPriceByBlur.test(userDishAddInput.value.price)) {
+            userLastInput.value[0] = userDishAddInput.value.price
+        }
+    }
+    else if (!checkPriceByInput.test(userDishAddInput.value.price)) {
+        userDishAddInput.value.price = userLastInput.value[0]
+    }
+}
+
 
 </script>
 
@@ -182,13 +250,19 @@ function inputNesCheck(e) {
                         <div grow>
                             <span>窗口号：</span>
                             <el-select v-model="userDishAddInput.windows_id">
-                                <el-option v-for="item in windowsList" :key="item.value" :label="item.label"
+                                <el-option v-for="item in windowList" :key="item.value" :label="item.label"
                                     :value="item.value" />
                             </el-select>
                         </div>
                     </div>
                     <div m-5 flex style="width: 100%;">
                         <div grow><span>清真：</span><el-checkbox v-model="userDishAddInput.muslim"></el-checkbox></div>
+                    </div>
+                    <div m-5 flex style="width: 100%;">
+                        <div grow flex flex-row><span>价格：</span>
+                            <el-input @blur="inputPriceNumCheck" @input="userInputPriceCheck"
+                                v-model="userDishAddInput.price" maxlength="300" />
+                        </div>
                     </div>
                     <div m-5 flex style="width: 100%;">
                         <div grow flex flex-row>
@@ -200,12 +274,14 @@ function inputNesCheck(e) {
                     <div m-5 flex style="width: 100%;">
                         <div grow flex flex-row>
                             <span>展示图片：</span>
-                            <DishUpload :picture-url="userDishAddInput.picture" @update:picture-url="(i)=>userDishAddInput.picture = i" />
+                            <DishUpload :picture-url="userDishAddInput.picture"
+                                @update:picture-url="(i) => userDishAddInput.picture = i" />
                         </div>
                     </div>
                     <div m-5 flex style="width: 100%;">
                         <div grow flex flex-row><span>备用图片：</span>
-                            <DishUpload :picture-url="userDishAddInput.sparePicture" @update:picture-url='(i)=>userDishAddInput.sparePicture = i' />
+                            <DishUpload :picture-url="userDishAddInput.sparePicture"
+                                @update:picture-url='(i) => userDishAddInput.sparePicture = i' />
                         </div>
                     </div>
                     <div>

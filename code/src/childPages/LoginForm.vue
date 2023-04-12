@@ -28,12 +28,16 @@ const userLoginEvent = async () => {
         return
     }
     try {
+    const loading = ElLoading.service({
+        fullscreen: true,
+        text: "正在登录",
+    })
         let formData = new URLSearchParams()
         formData.append("username", userLoginFormInput.value.userAccount)
         formData.append("password", userLoginFormInput.value.userPassword)
         await userLogin(formData)
             .then((res) => {
-                console.log(res)
+                loading.close()
                 user.value =
                 {
                     accessToken: res.data.access_token,
@@ -44,11 +48,13 @@ const userLoginEvent = async () => {
                 userLoginFormInput.value.userPassword = ''
             })
             .catch(err => {
-                console.log(err)
+                loading.close()
+                console.error(err)
                 alert("登录失败，请检查网络环境状态及账号密码是否输入正确。")
             })
     }
     catch {
+        loading.close()
         alert("登录失败，请检查网络环境状态及账号密码是否输入正确。")
     }
 }

@@ -1,6 +1,8 @@
-<script setup>
+<script setup>  
 import { ref } from "vue"
 import { useRouter } from "vue-router"
+import { qty } from "../status/data";
+import { initialShareInformation } from "../api/etc";
 
 const router = useRouter()
 
@@ -10,16 +12,19 @@ const childSystemItemList = ref(
     [
         {
             "item": "餐厅管理",
-            "icon": "/pics/icon.jpg",
+            "icon": "/pics/canteen.jpg",
             "path": "/canteenManage",
         },
         {
             "item": "菜品管理",
-            "icon": "/pics/icon.jpg",
+            "icon": "/pics/dish.jpg",
             "path": "/dishManage",
         },
     ]
 )
+
+initialShareInformation()
+qty.value = parseInt((document.body.clientHeight - 400) / 40)
 
 </script>
 

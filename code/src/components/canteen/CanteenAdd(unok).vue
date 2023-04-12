@@ -1,4 +1,4 @@
-<script setup>
+<script setup>  
 import { ref } from "vue"
 import { isNumber, range } from 'lodash'
 
@@ -6,8 +6,6 @@ import { addCanteenWindowStatus, canteenWindowsLimit, canteenLevelLimit } from "
 import { getCampus } from "../../api/canteen.js"
 import { convertToChinaNum } from "../../api/etc.js"
 import { computed } from "@vue/reactivity"
-
-console.log("canteen add was loaded.")
 
 //   添加基本上就是修改的操作，只是初始值为0. 只有与后端交互的api名字不同，叫pushAddData(); 状态为 addWindowStatus ， 其他一致。
 
@@ -36,13 +34,11 @@ const initialInput = () => {
     for (let l in range(canteenWindowsLimit)) {
         template.information.push("待定")
     }
-    console.log("template: ", userCanteenEditInput.value)
     for (let m in range(canteenLevelLimit)) {
         userCanteenEditInput.value.information.push(
             JSON.parse(JSON.stringify(template))
         )
     }
-    console.log("template: ", userCanteenEditInput.value)
 }
 
 const userPrimaryCanteenEdit = () => {
@@ -74,13 +70,11 @@ const userPrimaryCanteenEdit = () => {
                     cancelButtonText: "取消",
                     type: "warning",
                 })
-
-                console.log(userCanteenEditInput.value)
                 addCanteenWindowStatus.value = false
             }
         )
         .catch((err) => {
-            console.log("close catch", err)
+            console.error(err)
             return
         })
 }
@@ -133,7 +127,6 @@ const userInputLevelCheck = (i) => {
 }
 
 const userInputWindowsCheck = (i) => {
-    console.log("i", i, "userLastInput", userLastInput.value)
     let value = i.windows_num
     if (value > i.information.length) {
         i.windows_num = userLastInput.value[1]
@@ -146,7 +139,6 @@ const userInputWindowsCheck = (i) => {
     else {
         userLastInput.value[1] = value
     }
-    console.log("i", i)
 }
 
 const userInputLevelNegCheck = () => {
@@ -189,14 +181,11 @@ function checkWarnAdd(prop, mode = false) {
         i = document.getElementById(prop).getElementsByTagName('div')[1]
     }
     checkStatus.value = false
-    console.log("checkStatus", i)
     i.classList.add("warn")
-    console.log("checkStatus", i)
 }
 function checkWarnRemove(prop, mode = false, value) {
     if (value) {
         userLastInput.value[1] = value
-        console.log("userLastInput", userLastInput.value)
     }
     let i = null
     if (mode) {
@@ -207,18 +196,15 @@ function checkWarnRemove(prop, mode = false, value) {
     }
     checkStatus.value = true
     i.classList.remove("warn")
-    console.log("checkStatus", i.classList)
 }
 
 function inputNesCheck(e) {
     let value = e.target.value
-    console.log("hao123", value)
     if (value === "") {
         checkWarnAdd(document.getElementById(e.target.id).parentNode.parentNode, true)
     } else {
         checkWarnRemove(document.getElementById(e.target.id).parentNode.parentNode, true)
     }
-    console.log("checkStatus", document.getElementById(e.target.id).parentNode.parentNode.classList)
 }
 
 function inputLevelNegNumCheck() {

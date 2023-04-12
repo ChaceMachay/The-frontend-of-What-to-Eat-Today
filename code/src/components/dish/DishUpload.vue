@@ -19,15 +19,12 @@ const pictureUpload = async (a) => {
     let res = ''
     await uploadPicture(a)
         .then(a => {
-            console.log('res', a)
             res = a
         })
         .catch(err => {
-            console.log('err', err)
+            console.error(err)
             return
         })
-
-    console.log('sdf', res)
 
     if (pictureUrl.value) {
         await ElMessageBox.confirm(
@@ -52,7 +49,6 @@ const pictureUpload = async (a) => {
         emit('update:pictureUrl', res)
         pictureUrl.value = res
     }
-    console.log('sdf', picture.value)
 }
 
 const pictureDelete = async () => {
@@ -74,7 +70,7 @@ const removeCheck = () => {
             pictureDelete()
         })
         .catch(() => {
-            console.log('取消删除')
+            console.warn('取消删除')
         })
 }
 

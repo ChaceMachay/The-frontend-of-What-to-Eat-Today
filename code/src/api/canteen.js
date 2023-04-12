@@ -2,105 +2,205 @@ import { ref } from "vue"
 
 import { http } from "../utils/http"
 
+import { canteenInformation, nowCanteenPage, qty } from "../status/data"
+
+import { copy } from "./etc"
+
 
 // page为当前页码，qty为每页数量
 
-export const getCanteenInformationByPage = async (page, qty) => {
-    await http.get(
-        './pageCanteen',
-        {
-            params: 
-                {
-                    skips: (page - 1) * aty,
-                    limit: qty,
-                },
-        },
-    )
-    .then((i)=>{
-        let data = i.data.canteens_information
+export const initialCanteenManangeInformation = async () => {
+    const loading = ElLoading.service({
+        fullscreen: true,
+        text: "正在初始化",
     })
-}    
-export const getCampus =  () => {
-    // return await http.get(
-    //     './campus',
-    // )
-
-    return [
-            {
-                "campus_name": "中心校区",
-                "campus_id": "1",
-            },
-            {
-                "campus_name": "兴隆山校区",
-                "campus_id": "2",
-            },
-            {
-                "campus_name": "软件园校区",
-                "campus_id": "3",
-            },
-            {
-                "campus_name": "洪家楼校区",
-                "campus_id": "4",
-            },
-            {
-                "campus_name": "千佛山校区",
-                "campus_id": "5",
-            }, 
-            {
-                "campus_name": "趵突泉校区",
-                "campus_id": "6",
-            },
-        ]
+    await getCanteenInformationByPage(nowCanteenPage.value, qty.value)
+        .then((i) => {
+            loading.close()
+            canteenInformation.value = i
+        })
+        .catch((err) => {
+            loading.close()
+            ElMessageBox.confirm('获取餐厅信息失败！', '初始化失败', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            })
+            console.error(err)
+        }
+        )
 }
 
-export const getCanteenInformationBySearch =  (sreachWord) => {
-    // return await http.get(
-    //     './searchCanteen',
-    //     {
-    //         params: 
-    //             {
-    //                 search: sreachWord,
-    //             },
-    //     },
-    // )
-    console.log("搜索餐厅：",sreachWord)
-    return [
+export const nextPage = async () => {
+    const loading = ElLoading.service({
+        fullscreen: true,
+        text: "正在加载",
+    })
+    await getCanteenInformationByPage(nowCanteenPage.value + 1, qty.value)
+        .then((i) => {
+            if (i.length === 0) {
+                loading.close()
+                ElMessageBox.confirm('已经是最后一页了', '加载失败', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                })
+                return
+            }
+            else {
+                loading.close()
+                canteenInformation.value = i
+                nowCanteenPage.value += 1
+            }
+        })
+        .catch((err) => {
+            loading.close()
+        })
+}
+
+export const lastPage = async () => {
+    if (nowCanteenPage.value === 1) {
+        await ElMessageBox.confirm('已经是第一页了', '加载失败', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        })
+        return
+    }
+    const loading = ElLoading.service({
+        fullscreen: true,
+        text: "正在加载",
+    })
+    await getCanteenInformationByPage(nowCanteenPage.value - 1, qty.value)
+        .then((i) => {
+                loading.close()
+                canteenInformation.value = i
+                nowCanteenPage.value -= 1
+        })
+        .catch((err) => {
+            loading.close()
+        })
+}
+
+export const deleteCanteen = async (item) => {
+    const canteen_id = item.canteen_id
+    ElMessageBox.confirm("是否确认删除该餐厅信息？", "删除确认", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+    })
+        .then(async () => {
+            const loading = ElLoading.service({
+                fullscreen: true,
+                text: "正在删除",
+            })
+            await pushDeleteCanteen(canteen_id)
+                .then(async (i) => {
+                    loading.close()
+                    await ElMessageBox.confirm("删除成功！", "删除成功", {
+                        confirmButtonText: "确定",
+                        cancelButtonText: "取消",
+                        type: "warning",
+                    })
+                })
+                .catch(async (err) => {
+                    loading.close()
+                    await ElMessageBox.confirm("删除失败！", "删除失败", {
+                        confirmButtonText: "确定",
+                        cancelButtonText: "取消",
+                        type: "warning",
+                    })
+                    console.error(err)
+                })
+                .finally(() => {
+                    initialCanteenManangeInformation()
+                })
+        })
+        .catch(() => {
+            return
+        })
+}
+
+
+export const getCanteenInformationByPage = async (page, qty) => {
+    return await http.get(
+        '/background/canteens',
+        {
+            params:
             {
-                "canteen_name": "齐园",
-                "canteen_id": "11",
-                "level_num": 1,
-                "campus": {
-                    "campus_name":"中心校区",
-                    "campus_id": "1",
-                },
-                "information":
-                    [
-                        {
-                            "level_id": "5201",
-                            "windows_num": 2,
-                            "information": 
-                            [
-                                {
-                                    "windows_name":'麻辣香锅窗口',
-                                    "windows_id": "520201",
-                                }, 
-                                {
-                                    "windows_name":'螺蛳粉窗口',
-                                    "windows_id": "520202",
-                                },
-                            ],
-                        },
-                    ],
+                page: page,
+                limit: qty,
             },
-        ]
+        },
+    )
+        .then((i) => {
+            if ('response' in i) {
+                return []
+            }
+            else {
+                let o = i.data.data.canteens_information.map((j) => {
+                    j['information'] = copy(j['levels_information'])
+                    delete j['levels_information']
+                    j['information'].map((k) => {
+                        k['information'] = copy(k['windows_information'])
+                        delete k['windows_information']
+                    })
+                    return j
+                })
+                return o
+            }
+        })
+        .catch((err) => {
+            return err
+        })
+}
+export const getCampus = async () => {
+    return await http.get(
+        '/background/campus'
+    )
+        .then((i) => {
+            return i.data.data.campus
+        })
+        .catch((err) => {
+            return err
+        }
+        )
+}
+
+export const getCanteenInformationBySearch = (sreachWord) => {
+    console.log("搜索餐厅：", sreachWord)
 }
 
 export const addCanteen = async (data) => {
     return await http.post('/background/canteens', data)
-    .then((i)=> {
-        return i 
+        .then((i) => {
+            return i
+        })
+        .catch((err) => {
+            return err
+        })
+}
+
+export const pushDeleteCanteen = async (canteen_id) => {
+    return await http.delete('/background/canteens', {
+        params: {
+            canteen_id: canteen_id,
+        },
     })
-    .catch((err)=>{
-        return err
-    })
+        .then((i) => {
+            return i
+        })
+        .catch((err) => {
+            return err
+        })
+}
+
+export const pushEditData = async (data) => {
+    return await http.put('/background/canteens', data)
+        .then((i) => {
+            return i
+        })
+        .catch((err) => {
+            return err
+        })
 }

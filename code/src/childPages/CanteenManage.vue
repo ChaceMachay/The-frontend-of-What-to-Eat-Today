@@ -1,10 +1,11 @@
 <script setup> 
-import { ref, computed } from "vue"
+import { ref} from "vue"
 import { useRouter } from "vue-router"
-import { showCanteenWindowStatus, editCanteenWindowStatus,addCanteenWindowStatus, windowStatus } from "../status/data"
-//import { getCanteenInformationByPage, getCanteenInformationBySearch } from "../api/canteen"
+import { showCanteenWindowStatus, editCanteenWindowStatus,addCanteenWindowStatus, windowStatus,
+    canteenInformation, nowCanteenPage} from "../status/data"
 
-import { getCanteenInformationByPage, getCanteenInformationBySearch } from "../test/api/canteen"
+import { initialCanteenManangeInformation,nextPage,lastPage } from "../api/canteen"
+
 
 import CanteenShow from "../components/canteen/CanteenShow.vue"
 import CanteenEdit from "../components/canteen/CanteenEdit.vue"
@@ -12,65 +13,18 @@ import CanteenAdd from "../components/canteen/CanteenAdd.vue"
 import Operations from "../components/Operations.vue"
 
 const router = useRouter()
-const nowPage = ref(1)
-const itemHeight = ref(20)
 const userSearchInput = ref("")
-const userFilterInput = ref([])
-const qty = computed(() => {
-    return document.body.clientHeight / 100 * 60 / itemHeight.value
-})
-const canteenInformation = ref([])
-
-canteenInformation.value = getCanteenInformationByPage(nowPage.value, qty.value)
-
-
-const nextPage = async () => {
-    try {
-        canteenInformation.value = getCanteenInformationByPage(nowPage.value + 1, qty.value)
-    }
-    catch {
-        alert("已经是最后一页了")
-        return
-    }
-    nowPage.value += 1
-}
-
-const lastPage = async () => {
-    try {
-        canteenInformation.value = getCanteenInformationByPage(nowPage.value - 1, qty.value)
-    }
-    catch {
-        alert("已经是第一页了")
-        return
-    }
-    nowPage.value -= 1
-}
-
-const search = async () => {
-    const loading = ElLoading.service({
-        fullscreen: true,
-        text: "正在搜索",
-    })
-    try {
-        canteenInformation.value = getCanteenInformationBySearch(userSearchInput.value, 1, qty.value)
-        userSearchInput.value = null
-    }
-    catch {
-        loading.close()
-        alert("没有找到相关信息")
-        return
-    }
-    loading.close()
-    nowPage.value = 1
-}
+//const userFilterInput = ref([])
 
 const userAddCanteen = () => {
     if (windowStatus.value) {
         return
     }
     addCanteenWindowStatus.value = true
-    console.log("addItem was called. ")
 }
+
+nowCanteenPage.value = 1
+initialCanteenManangeInformation()
 
 </script>
 
@@ -114,10 +68,11 @@ const userAddCanteen = () => {
         </el-main>
         <el-footer>
             <el-button @click="lastPage">上一页</el-button>
+            <el-button>{{nowCanteenPage}}</el-button>
             <el-button @click="nextPage">下一页</el-button>
         </el-footer>
     </el-container>
-    <div style="position: absolute; border-radius: 100%; width:4rem; height: 4rem;bottom: 5rem;right:5rem;" bg-yellow-5
+    <div style="position: fixed; border-radius: 100%; width:4rem; height: 4rem;bottom: 5rem;right:5rem; z-index: 100;" bg-yellow-5
         @click="userAddCanteen"></div>
 </template>
 

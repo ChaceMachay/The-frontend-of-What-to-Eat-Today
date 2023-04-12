@@ -5,13 +5,10 @@ import { windowsMessage, windowStatus } from '../status/data'
 import { showCanteenWindowStatus, editCanteenWindowStatus } from '../status/data'
 import { showDishWindowStatus, editDishWindowStatus } from '../status/data'
 
-
-import { deleteCanteen } from './canteen/CanteenDelete'
-import { deleteDish } from './dish/DishDelete'
+import { deleteCanteen } from '../api/canteen'
+import { deleteDish } from '../api/dish'
 
 const props = defineProps(['item', 'type'])
-
-console.log("operations was loaded, and it message is: ", props.item)
 
 
 //  底下这一溜要根据type是canteen还是dish做个if-else
@@ -29,15 +26,13 @@ const showItem = () => {
         windowsMessage.value = props.item
     }
     else {
-        console.log("undefined type props.")
+        console.error("undefined type props.")
         alert("系统版本过低，请更新系统后重试。")
     }
-    console.log("showItem was called, and it message is: ", windowsMessage.value)
 }
 
 const editItem = () => {
     if (windowStatus.value) {
-        console.log("windowStatus.value is true", editCanteenWindowStatus.value, editDishWindowStatus.value)
         return
     }
     if (props.type === "canteen") {
@@ -49,14 +44,12 @@ const editItem = () => {
         windowsMessage.value = props.item
     }
     else {
-        console.log("undefined type props.")
+        console.error("undefined type props.")
         alert("系统版本过低，请更新系统后重试。")
     }
-    console.log("editItem was called, and it message is: ",'1' ,windowsMessage.value,'2', editCanteenWindowStatus.value, '3', editDishWindowStatus.value)
 }
 
 const deleteItem = () => {
-    console.log("deleteItem was called, and it message is: ", props.type)
     if (windowStatus.value) {
         return
     }
@@ -67,7 +60,7 @@ const deleteItem = () => {
         deleteDish(props.item)
     }
     else {
-        console.log("undefined type props.")
+        console.error();("undefined type props.")
         alert("系统版本过低，请更新系统后重试。")
     }
 }

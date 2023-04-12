@@ -1,11 +1,7 @@
 <script setup>
 import { ref } from "vue"
-import { range } from 'lodash'
-
-import { windowsMessage, showDishWindowStatus, baseUrl } from "../../status/data.js"
-import { showDishDateChinese } from "../../api/etc.js"
-
-console.log("dish show was loaded, and it message is: ", windowsMessage.value)
+import { windowsMessage, showDishWindowStatus, baseUrl,windowsList } from "../../status/data.js"
+import { showDishDateChinese,convertToChinaNum } from "../../api/etc.js"
 
 
 const labelList = ref([{ 'labelName': '汤类', "labelClass": "green" }, { "labelName": '辣', "labelClass": "red" }])
@@ -16,7 +12,12 @@ showDishData.value = JSON.parse(JSON.stringify(windowsMessage.value))
 const userCloseDishShowWindow = () => {
     showDishWindowStatus.value = false
 }
-
+function getIndex(arr, val) {
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i].canteen_id == val) return i;
+    }
+    return -1
+}
 </script>
 
 <template>
@@ -33,9 +34,9 @@ const userCloseDishShowWindow = () => {
                         <div grow><span>时间：</span><span>{{ showDishDateChinese(showDishData.date) }}</span></div>
                     </div>
                     <div m-5 flex style="width: 100%;">
-                        <div grow><span>餐厅：</span><span>{{ showDishData.dish_id.slice(0, 1) }}</span></div>
-                        <div grow><span>楼层：</span><span>{{ showDishData.dish_id.slice(2, 4) }}</span></div>
-                        <div grow><span>窗口号：</span><span>{{ showDishData.windows_id }}</span></div>
+                        <div grow><span>餐厅：</span><span>{{ windowsList[getIndex(windowsList,showDishData.dish_id.slice(0, 2))].canteen_name }}</span></div>
+                        <div grow><span>楼层：</span><span>{{ convertToChinaNum(showDishData.dish_id.slice(2, 4)) }}层</span></div>
+                        <div grow><span>窗口号：</span><span>{{ showDishData.windows_id.slice(4, 6)*1 }}号窗口</span></div>
                     </div>
                     <div m-5 flex style="width: 100%;">
                         <div grow><span>清真：</span><el-checkbox v-model="showDishData.muslim" disabled></el-checkbox></div>
