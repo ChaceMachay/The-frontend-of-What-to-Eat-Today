@@ -2,6 +2,7 @@ import { ref, computed } from "vue"
 
 export const options = ref([{ 'campus_id': 1, 'campus_name': '齐园' }])
 export const windowsList = ref([])
+export const reloadStatus = ref(false)
 
 export const canteenInformation = ref([])
 export const dishInformation = ref([])

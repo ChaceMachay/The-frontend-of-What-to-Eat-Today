@@ -3,12 +3,18 @@ import { useRouter } from "vue-router"
 
 import { userLogout } from "../api/user"
 import { getUserLoginInformation } from "../api/storage"
+import { reloadStatus } from '../status/data'
 
 
 const user = getUserLoginInformation()
 const router = useRouter()
 
 router.push('/')
+
+if (reloadStatus.value) {
+    reloadStatus.value = false
+    location.reload()
+}
 
 </script>
 

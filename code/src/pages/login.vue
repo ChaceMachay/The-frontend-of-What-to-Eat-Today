@@ -1,4 +1,4 @@
-<script setup>
+<script setup>  
 import LoginForm from "../childPages/LoginForm.vue"
 
 </script>
