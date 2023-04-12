@@ -31,16 +31,18 @@ function getIndex(arr, val) {
                 <el-main style="overflow-x: hidden;">
                     <div m-5 flex flex-row style="width: 100%;">
                         <div grow><span>uid: </span><span>{{ showDishData.dish_id }}</span></div>
-                        <div grow><span>名称：</span><span>{{ showDishData.dish_name }}</span></div>
+                        <div grow><span>&ensp;&ensp;&ensp;名称：</span><span>{{ showDishData.dish_name }}</span></div>
                         <div grow><span>时间：</span><span>{{ showDishDateChinese(showDishData.date) }}</span></div>
                     </div>
                     <div m-5 flex style="width: 100%;">
                         <div grow><span>餐厅：</span><span>{{ windowsList[getIndex(windowsList,showDishData.dish_id.slice(0, 2))].canteen_name }}</span></div>
-                        <div grow><span>楼层：</span><span>{{ convertToChinaNum(showDishData.dish_id.slice(2, 4)) }}层</span></div>
-                        <div grow><span>窗口号：</span><span>{{ showDishData.windows_id.slice(4, 6)*1 }}号窗口</span></div>
+                        <div grow><span>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;楼层：</span><span>{{ convertToChinaNum(showDishData.dish_id.slice(2, 4)) }}层</span></div>
+                        <div grow><span>&ensp;&ensp;&ensp;窗口号：</span><span>{{ showDishData.windows_id.slice(4, 6)*1 }}号窗口</span></div>
                     </div>
                     <div m-5 flex style="width: 100%;">
                         <div grow><span>清真：</span><el-checkbox v-model="showDishData.muslim" disabled></el-checkbox></div>
+                        <div grow><span>价格：</span><span>{{ showDishData.price }}元</span></div>
+                        <div grow></div>
                     </div>
                     <div m-5 flex style="width: 100%;">
                         <div grow flex flex-row>

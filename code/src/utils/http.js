@@ -35,8 +35,8 @@ http.interceptors.response.use(
         }
         else if (err.response.status === 401) {
             alert('登录失效，请重新登录')
-            user.value.userLoginStatus = 0
             router.push('/')
+            user.value.userLoginStatus = 0
 
         }
         return Promise.reject(err)
