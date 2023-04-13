@@ -2,7 +2,7 @@ import { ref } from "vue"
 
 import { http } from "../utils/http"
 
-import { canteenInformation, nowCanteenPage, qty } from "../status/data"
+import { allCanteenPage, canteenInformation, nowCanteenPage, qty } from "../status/data"
 
 import { copy } from "./etc"
 
@@ -32,6 +32,14 @@ export const initialCanteenManangeInformation = async () => {
 }
 
 export const nextPage = async () => {
+    if (nowCanteenPage.value === allCanteenPage.value) {
+        await ElMessageBox.confirm('已经是最后一页了', '加载失败', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        })
+        return
+    }
     const loading = ElLoading.service({
         fullscreen: true,
         text: "正在加载",
@@ -50,7 +58,6 @@ export const nextPage = async () => {
             else {
                 loading.close()
                 canteenInformation.value = i
-                nowCanteenPage.value += 1
             }
         })
         .catch((err) => {
@@ -75,7 +82,6 @@ export const lastPage = async () => {
         .then((i) => {
                 loading.close()
                 canteenInformation.value = i
-                nowCanteenPage.value -= 1
         })
         .catch((err) => {
             loading.close()
@@ -153,6 +159,8 @@ export const getCanteenInformationByPage = async (page, qty) => {
                     })
                     return j
                 })
+                nowCanteenPage.value = i.data.data.page_information.page
+                allCanteenPage.value = i.data.data.page_information.total_page
                 return o
             }
         })

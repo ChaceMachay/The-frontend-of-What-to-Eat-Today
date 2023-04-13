@@ -1,5 +1,5 @@
 import { http } from "../utils/http"
-import { dishInformation, nowDishPage,qty, } from "../status/data"
+import { allDishPage, dishInformation, nowDishPage,qty, } from "../status/data"
 
 
 // page为当前页码，qty为每页数量
@@ -28,6 +28,14 @@ export const initialdishManangeInformation = async () => {
 }
 
 export const nextPage = async () => {
+    if (nowDishPage.value === allDishPage.value) {
+        await ElMessageBox.confirm('已经是最后一页了', '加载失败', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        })
+        return
+    }
     const loading = ElLoading.service({
         fullscreen: true,
         text: "正在加载",
@@ -46,7 +54,6 @@ export const nextPage = async () => {
             else {
                 loading.close()
                 dishInformation.value = i
-                nowDishPage.value += 1
             }
         })
         .catch((err) => {
@@ -71,7 +78,6 @@ export const lastPage = async () => {
         .then((i) => {
                 loading.close()
                 dishInformation.value = i
-                nowDishPage.value -= 1
         })
         .catch((err) => {
             loading.close()
@@ -152,6 +158,9 @@ export const getDishInformationByPage = async (page, qty) => {
                     delete j.position
                     return j
                 })
+                console.log(i.data.data)
+                nowDishPage.value = i.data.page_information.page
+                allDishPage.value = i.data.page_information.total_page
                 return o
             }
         })

@@ -8,6 +8,8 @@ export const canteenInformation = ref([])
 export const dishInformation = ref([])
 export const nowCanteenPage = ref(1)
 export const nowDishPage = ref(1)
+export const allCanteenPage = ref(1)
+export const allDishPage = ref(1)
 export const qty = ref(15)
 
 export const canteenLevelLimit = 10

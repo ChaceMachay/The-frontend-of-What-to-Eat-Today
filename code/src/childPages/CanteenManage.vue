@@ -2,7 +2,7 @@
 import { ref} from "vue"
 import { useRouter } from "vue-router"
 import { showCanteenWindowStatus, editCanteenWindowStatus,addCanteenWindowStatus, windowStatus,
-    canteenInformation, nowCanteenPage} from "../status/data"
+    canteenInformation, nowCanteenPage, allCanteenPage} from "../status/data"
 
 import { initialCanteenManangeInformation,nextPage,lastPage } from "../api/canteen"
 
@@ -66,13 +66,14 @@ initialCanteenManangeInformation()
     </el-main>
     <el-footer>
       <el-button @click="lastPage">上一页</el-button>
-      <el-button>{{ nowCanteenPage }}</el-button>
+      <el-button>{{ nowCanteenPage }} / {{ allCanteenPage }}</el-button>
       <el-button @click="nextPage">下一页</el-button>
     </el-footer>
   </el-container>
   <div
     style="
-      position: absolute;
+      position: fixed;
+      z-index: 100; 
       border-radius: 100%;
       width: 4rem;
       height: 4rem;

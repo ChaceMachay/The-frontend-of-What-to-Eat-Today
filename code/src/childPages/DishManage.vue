@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue"
 import { useRouter } from "vue-router"
-import { showDishWindowStatus, editDishWindowStatus, addDishWindowStatus, windowStatus, nowDishPage,windowsList } from "../status/data"
+import { showDishWindowStatus, editDishWindowStatus, addDishWindowStatus, windowStatus, nowDishPage,windowsList, allDishPage } from "../status/data"
 import { convertToChinaNum, showDishDateChinese } from "../api/etc"
 import { lastPage,nextPage } from "../api/dish"
 
@@ -99,7 +99,7 @@ function getIndex(arr, val) {
     <el-footer>
       <div flex flex-row>
         <el-button @click="lastPage">上一页</el-button>
-        <el-button>{{ nowDishPage }}</el-button>
+        <el-button>{{ nowDishPage }} / {{ allDishPage }}</el-button>
         <el-button @click="nextPage">下一页</el-button>
       </div>
     </el-footer>
@@ -107,6 +107,7 @@ function getIndex(arr, val) {
   <div
     style="   
       position: fixed;
+      z-index: 100;     
       border-radius: 100%;
       width: 4rem;
       height: 4rem;
