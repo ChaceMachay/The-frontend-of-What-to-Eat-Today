@@ -81,7 +81,7 @@ function getIndex(arr, val) {
                 .canteen_name
             }}-{{ convertToChinaNum(scope.row.dish_id.slice(2, 4)) }}层-{{
               scope.row.dish_id.slice(4, 6) * 1
-            }}号窗口-{{ scope.row.dish_name }}
+            }}号窗口-{{ scope.row.windows_name }}
           </template>
         </el-table-column>
         <el-table-column label="时间" grow="1">
@@ -105,7 +105,7 @@ function getIndex(arr, val) {
     </el-footer>
   </el-container>
   <div
-    style="
+    style="   
       position: fixed;
       border-radius: 100%;
       width: 4rem;

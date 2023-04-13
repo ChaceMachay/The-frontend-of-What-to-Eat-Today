@@ -23,7 +23,7 @@ function getIndex(arr, val) {
 
 <template>
     <div class="dialog">
-        <el-dialog v-model="showDishWindowStatus" :show-close="false" align-center>
+        <el-dialog v-model="showDishWindowStatus" :show-close="false" align-center append-to-body>
             <template #header>
                 <div flex items-center h="full" bg-yellow-5><span c-white m-3>查看菜品详情</span></div>
             </template>
@@ -37,7 +37,7 @@ function getIndex(arr, val) {
                     <div m-5 flex style="width: 100%;">
                         <div grow><span>餐厅：</span><span>{{ windowsList[getIndex(windowsList,showDishData.dish_id.slice(0, 2))].canteen_name }}</span></div>
                         <div grow><span>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;楼层：</span><span>{{ convertToChinaNum(showDishData.dish_id.slice(2, 4)) }}层</span></div>
-                        <div grow><span>&ensp;&ensp;&ensp;窗口号：</span><span>{{ showDishData.windows_id.slice(4, 6)*1 }}号窗口</span></div>
+                        <div grow><span>&ensp;&ensp;窗口号：</span><span>{{ showDishData.windows_id.slice(4, 6)*1 }}号窗口</span></div>
                     </div>
                     <div m-5 flex style="width: 100%;">
                         <div grow><span>清真：</span><el-checkbox v-model="showDishData.muslim" disabled></el-checkbox></div>
@@ -93,7 +93,7 @@ function getIndex(arr, val) {
                             <div flex-row w="full">
                                 <div grow></div>
                                 <div grow>
-                                    <el-button @click="userCloseDishShowWindow">返回</el-button>
+                                    <el-button bg-yellow-5 style="color: white; position: relative; left: 2rem; bottom: 1rem;" @click="userCloseDishShowWindow">返回</el-button>
                                 </div>
                                 <div grow></div>
                             </div>
@@ -106,17 +106,21 @@ function getIndex(arr, val) {
 </template>
 
 <style scoped>
+.dialog:deep(.el-dialog) {
+    margin: 0;
+}
 .container:deep(.el-card__body) {
     padding: 0;
 }
 
 .dialog:deep(.el-dialog__header) {
-    padding: 0;
+    padding: 0!important;
     margin: 0;
 }
 
 .dialog:deep(.el-main) {
     padding: 0;
+    padding-left: 0;
     margin: 0;
 }
 

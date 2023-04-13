@@ -1,263 +1,296 @@
 <script setup>
-import { ref } from "vue"
-import { range } from 'lodash'
+import { ref } from "vue";
+import { isNumber, range } from "lodash";
 
-import { windowsMessage, editCanteenWindowStatus, canteenWindowsLimit, canteenLevelLimit, options } from "../../status/data.js"
-import { convertToChinaNum, copy } from "../../api/etc.js"
-import { initialCanteenManangeInformation, pushEditData } from "../../api/canteen";
+import {
+  windowsMessage,
+  editCanteenWindowStatus,
+  canteenWindowsLimit,
+  canteenLevelLimit,
+  options,
+} from "../../status/data.js";
+import { convertToChinaNum, copy } from "../../api/etc.js";
+import {
+  initialCanteenManangeInformation,
+  pushEditData,
+} from "../../api/canteen";
 
-const levelNegStatus = ref(false)
-const levelNegNum = ref(0)
+const levelNegStatus = ref(false);
+const levelNegNum = ref(0);
 
 const finalSet = () => {
-    let k = 0
+  let k = 0;
 
-    userCanteenEditInput.value['levels'] = userCanteenEditInput.value.information.slice(0, userCanteenEditInput.value.level_num)
-    delete userCanteenEditInput.value['information']
-    userCanteenEditInput.value['canteen_id']
-    userCanteenEditInput.value.levels = userCanteenEditInput.value.levels.map((i) => {
-        i.level = levelNegStatus.value ? (k - levelNegNum.value + (k - levelNegNum.value >= 0 ? 1 : 0)) : k + 1
-        k++
-        i['windows_information'] = i.information.slice(0, i.windows_num)
-        delete i['information']
-        let y = 1
-        i.windows_information = i.windows_information.map((u) => {
-            let j = new Object()
-            j['windows_name'] = u
-            j['windows'] = y
-            y++
-            return j
-        })
-        return i
-    })
-    let u = {}
-    u['canteen_id'] = userCanteenEditInput.value.canteen_id
-    delete userCanteenEditInput.value['canteen_id']
-    u['canteen_message'] = userCanteenEditInput.value
-    userCanteenEditInput.value = copy(u)
-    console.log(userCanteenEditInput.value)
-}
+  userCanteenEditInput.value["levels"] =
+    userCanteenEditInput.value.information.slice(
+      0,
+      userCanteenEditInput.value.level_num
+    );
+  delete userCanteenEditInput.value["information"];
+  userCanteenEditInput.value["canteen_id"];
+  userCanteenEditInput.value.levels = userCanteenEditInput.value.levels.map(
+    (i) => {
+      i.level = levelNegStatus.value
+        ? k - levelNegNum.value + (k - levelNegNum.value >= 0 ? 1 : 0)
+        : k + 1;
+      k++;
+      i["windows_information"] = i.information.slice(0, i.windows_num);
+      delete i["information"];
+      let y = 1;
+      i.windows_information = i.windows_information.map((u) => {
+        let j = new Object();
+        j["windows_name"] = u;
+        j["windows"] = y;
+        y++;
+        return j;
+      });
+      return i;
+    }
+  );
+  let u = {};
+  u["canteen_id"] = userCanteenEditInput.value.canteen_id;
+  delete userCanteenEditInput.value["canteen_id"];
+  u["canteen_message"] = userCanteenEditInput.value;
+  userCanteenEditInput.value = copy(u);
+  console.log(userCanteenEditInput.value);
+};
 
 const userCanteenEditInput = ref({
-    canteen_id: "",
-    campus_id: "",
-    canteen_name: "",
-    level_num: 1,
-    information: [{
-        windows_num: 1,
-        information: [],
-    }]
-})
+  canteen_id: "",
+  campus_id: "",
+  canteen_name: "",
+  level_num: 1,
+  information: [
+    {
+      windows_num: 1,
+      information: [],
+    },
+  ],
+});
 
 const initialInput = () => {
-    levelNegStatus.value = windowsMessage.value.information[0].level < 0 ? true : false
-    levelNegNum.value = windowsMessage.value.information[0].level < 0 ? -1 * windowsMessage.value.information[0].level : 0
-    userCanteenEditInput.value = {
-        canteen_id: JSON.parse(JSON.stringify(windowsMessage.value.canteen_id)),
-        campus_id: JSON.parse(JSON.stringify(windowsMessage.value.campus.campus_id)),
-        canteen_name: JSON.parse(JSON.stringify(windowsMessage.value.canteen_name)),
-        level_num: JSON.parse(JSON.stringify(windowsMessage.value.level_num)),
-    }
+  levelNegStatus.value =
+    windowsMessage.value.information[0].level < 0 ? true : false;
+  levelNegNum.value =
+    windowsMessage.value.information[0].level < 0
+      ? -1 * windowsMessage.value.information[0].level
+      : 0;
+  userCanteenEditInput.value = {
+    canteen_id: JSON.parse(JSON.stringify(windowsMessage.value.canteen_id)),
+    campus_id: JSON.parse(
+      JSON.stringify(windowsMessage.value.campus.campus_id)
+    ),
+    canteen_name: JSON.parse(JSON.stringify(windowsMessage.value.canteen_name)),
+    level_num: JSON.parse(JSON.stringify(windowsMessage.value.level_num)),
+  };
 
-    userCanteenEditInput.value.information = windowsMessage.value.information.map(i => {
-        let temp = {
-            level: JSON.parse(JSON.stringify(i.level)),
-            windows_num: JSON.parse(JSON.stringify(i.windows_num)),
-            information: i.information.map(i => JSON.parse(JSON.stringify(i.windows_name)))
-        }
-        for (let k in range(canteenWindowsLimit)) {
-            temp.information.push("待定")
-        }
-        return temp
-    })
-    let template = {
-        level: 1,
-        windows_num: 1,
-        information: [],
+  userCanteenEditInput.value.information = windowsMessage.value.information.map(
+    (i) => {
+      let temp = {
+        level: JSON.parse(JSON.stringify(i.level)),
+        windows_num: JSON.parse(JSON.stringify(i.windows_num)),
+        information: i.information.map((i) =>
+          JSON.parse(JSON.stringify(i.windows_name))
+        ),
+      };
+      for (let k in range(canteenWindowsLimit)) {
+        temp.information.push("待定");
+      }
+      return temp;
     }
-    for (let l in range(canteenWindowsLimit)) {
-        template.information.push("待定")
-    }
-    for (let m in range(canteenLevelLimit)) {
-        userCanteenEditInput.value.information.push(
-            JSON.parse(JSON.stringify(template))
-        )
-    }
-}
+  );
+  let template = {
+    level: 1,
+    windows_num: 1,
+    information: [],
+  };
+  for (let l in range(canteenWindowsLimit)) {
+    template.information.push("待定");
+  }
+  for (let m in range(canteenLevelLimit)) {
+    userCanteenEditInput.value.information.push(
+      JSON.parse(JSON.stringify(template))
+    );
+  }
+};
 
 const userPrimaryCanteenEdit = async () => {
-    ElMessageBox.confirm("是否确认修改餐厅信息？", "修改确认", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-    })
-        .then(
-            async () => {
-                if (!checkStatus.value) {
-                    ElMessageBox.confirm("必填项不能为空！", "添加失败", {
-                        confirmButtonText: "确定",
-                        cancelButtonText: "取消",
-                        type: "warning",
-                    })
-                    return
-                }
-                const loading = ElLoading.service({
-                    fullscreen: true,
-                    text: "正在提交修改数据",
-                })
-                finalSet()
-                await pushEditData(userCanteenEditInput.value)
-                    .then(async (i) => {
-                        if (i.status != 200) {
-                            await ElMessageBox.confirm("修改餐厅信息失败！", "修改失败", {
-                                confirmButtonText: "确定",
-                                cancelButtonText: "取消",
-                                type: "warning",
-                            })
-                            loading.close()
-                            editCanteenWindowStatus.value = false
-                        }
-                        else {
-                            await ElMessageBox.confirm("修改餐厅信息成功！", "修改成功", {
-                                confirmButtonText: "确定",
-                                cancelButtonText: "取消",
-                                type: "warning",
-                            })
-                            loading.close()
-                            editCanteenWindowStatus.value = false
-                        }
-                    })
-                    .catch(async (i)=>{
-                        console.warn(i)
-                        await ElMessageBox.confirm("修改餐厅信息失败！", "修改失败", {
-                                confirmButtonText: "确定",
-                                cancelButtonText: "取消",
-                                type: "warning",
-                            })
-                            loading.close()
-                            editCanteenWindowStatus.value = false
-                    })
-            }
-        )
-        .catch((err) => {
-            editCanteenWindowStatus.value = false
-            console.error(err)
+  ElMessageBox.confirm("是否确认修改餐厅信息？", "修改确认", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(async () => {
+      if (!checkStatus.value) {
+        await ElMessageBox.confirm("必填项不能为空！", "添加失败", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }).catch((i) => {
+          console.log(i);
+        });
+        return;
+      }
+      const loading = ElLoading.service({
+        fullscreen: true,
+        text: "正在提交修改数据",
+      });
+      finalSet();
+      await pushEditData(userCanteenEditInput.value)
+        .then(async (i) => {
+          if (i.status != 200) {
+            await ElMessageBox.confirm("修改餐厅信息失败！", "修改失败", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning",
+            }).catch((i) => {
+              console.log(i);
+            });
+            loading.close();
+            editCanteenWindowStatus.value = false;
+          } else {
+            await ElMessageBox.confirm("修改餐厅信息成功！", "修改成功", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning",
+            }).catch((i) => {
+              console.log(i);
+            });
+            loading.close();
+            editCanteenWindowStatus.value = false;
+          }
+        })
+        .catch(async (i) => {
+          console.warn(i);
+          await ElMessageBox.confirm("修改餐厅信息失败！", "修改失败", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning",
+          }).catch((i) => {
+            console.warn(i);
+          });
+          loading.close();
+          editCanteenWindowStatus.value = false;
         })
         .finally(() => {
-            initialCanteenManangeInformation()
-        })
-}
-
+          initialCanteenManangeInformation();
+        });
+    })
+    .catch((err) => {
+      return;
+    });
+};
 
 const userCloseCanteenEditWindow = () => {
-    ElMessageBox.confirm("数据尚未保存，是否退出？", "返回确认", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+  ElMessageBox.confirm("数据尚未保存，是否退出？", "返回确认", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(() => {
+      editCanteenWindowStatus.value = false;
     })
-        .then(() => {
-            editCanteenWindowStatus.value = false
-        })
-        .catch(() => {
-            return
-        })
-}
-const userLastInput = ref([0, 0, 0])
-userLastInput.value[0] = 1
-userLastInput.value[1] = 1
+    .catch(() => {
+      return;
+    });
+};
+const userLastInput = ref([0, 0, 0]);
+userLastInput.value[0] = 1;
+userLastInput.value[1] = 1;
 
 const userInputLevelCheck = (i) => {
-    let value = i.level_num
-    if (!isNumber(value)) {
-        if (value !== '') {
-            i.level_num = 0
-        }
+  let value = i.level_num;
+  if (!isNumber(value)) {
+    if (value !== "") {
+      i.level_num = 0;
     }
-    else if (value > i.information.length) {
-        i.level_num = userLastInput.value[0]
-        ElMessageBox.alert("层数超限，单次添加不可超过 10 层。", "超限", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-        })
-    }
-    else {
-        userLastInput.value[0] = value
-    }
-}
+  } else if (value > i.information.length) {
+    i.level_num = userLastInput.value[0];
+    ElMessageBox.alert("层数超限，单次添加不可超过 10 层。", "超限", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    });
+  } else {
+    userLastInput.value[0] = value;
+  }
+};
 
 const userInputLevelNegCheck = () => {
-    if (!isNumber(levelNegNum.value)) {
-        if (levelNegNum.value !== '') {
-            levelNegNum.value = userLastInput.value[2]
-        }
+  if (!isNumber(levelNegNum.value)) {
+    if (levelNegNum.value !== "") {
+      levelNegNum.value = userLastInput.value[2];
     }
-    else if (levelNegNum.value > userCanteenEditInput.value.level_num) {
-        levelNegNum.value = userLastInput.value[2]
-        ElMessageBox.alert("负层数不得超过实际层数！", "超限", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-        })
-    }
-    else {
-        userLastInput.value[2] = levelNegNum.value
-    }
-}
+  } else if (levelNegNum.value > userCanteenEditInput.value.level_num) {
+    levelNegNum.value = userLastInput.value[2];
+    ElMessageBox.alert("负层数不得超过实际层数！", "超限", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    });
+  } else {
+    userLastInput.value[2] = levelNegNum.value;
+  }
+};
 
 const userInputWindowsCheck = (i) => {
-    let value = i.windows_num
-    if (value > i.information.length) {
-        i.windows_num = userLastInput.value[1]
-        ElMessageBox.alert("窗口数超限，单次添加不可超过 20 个。", "超限", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-        })
-    }
-    else {
-        userLastInput.value[1] = value
-    }
-}
+  let value = i.windows_num;
+  if (value > i.information.length) {
+    i.windows_num = userLastInput.value[1];
+    ElMessageBox.alert("窗口数超限，单次添加不可超过 20 个。", "超限", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    });
+  } else {
+    userLastInput.value[1] = value;
+  }
+};
 
-const checkStatus = ref(true)
+const checkStatus = ref(true);
 function checkWarnAdd(prop, mode = false) {
-    let i = null
-    if (mode) {
-        i = prop
-    } else {
-        i = document.getElementById(prop).getElementsByTagName('div')[1]
-    }
-    checkStatus.value = false
-    i.classList.add("warn")
+  let i = null;
+  if (mode) {
+    i = prop;
+  } else {
+    i = document.getElementById(prop).getElementsByTagName("div")[1];
+  }
+  checkStatus.value = false;
+  i.classList.add("warn");
 }
 function checkWarnRemove(prop, mode = false, value) {
-    if (value) {
-        userLastInput.value[1] = value
-    }
-    let i = null
-    if (mode) {
-        i = prop
-    } else {
-        console
-        i = document.getElementById(prop).getElementsByClassName('warn')[0]
-    }
-    checkStatus.value = true
-    i.classList.remove("warn")
+  if (value) {
+    userLastInput.value[1] = value;
+  }
+  let i = null;
+  if (mode) {
+    i = prop;
+  } else {
+    console;
+    i = document.getElementById(prop).getElementsByClassName("warn")[0];
+  }
+  checkStatus.value = true;
+  i.classList.remove("warn");
 }
 
 function inputNesCheck(e) {
-    let value = e.target.value
-    if (value === "") {
-        checkWarnAdd(document.getElementById(e.target.id).parentNode.parentNode, true)
-    } else {
-        checkWarnRemove(document.getElementById(e.target.id).parentNode.parentNode, true)
-    }
+  let value = e.target.value;
+  if (value === "") {
+    checkWarnAdd(
+      document.getElementById(e.target.id).parentNode.parentNode,
+      true
+    );
+  } else {
+    checkWarnRemove(
+      document.getElementById(e.target.id).parentNode.parentNode,
+      true
+    );
+  }
 }
 function inputLevelNegNumCheck() {
-    levelNegNum.value = levelNegNum.value === '' ? 0 : levelNegNum.value
+  levelNegNum.value = levelNegNum.value === "" ? 0 : levelNegNum.value;
 }
-initialInput()
+initialInput();
 </script>
 
 <template>
@@ -269,6 +302,7 @@ initialInput()
       :show-close="false"
       align-center
       :close-on-click-modal="false"
+      append-to-body
     >
       <template #header>
         <div flex items-center h="full" bg-yellow-5>
@@ -293,10 +327,10 @@ initialInput()
               <span mt-1>名称：</span>
               <div style="width: auto">
                 <el-input
-                    @focus="checkWarnRemove('canteenName')"
-                    @blur="inputNesCheck"
-                    maxlength="10"
-                    v-model="userCanteenEditInput.canteen_name"
+                  @focus="checkWarnRemove('canteenName')"
+                  @blur="inputNesCheck"
+                  maxlength="10"
+                  v-model="userCanteenEditInput.canteen_name"
                 />
               </div>
             </div>
@@ -304,18 +338,18 @@ initialInput()
           <div m-5 flex style="width: 100%" flex-row id="levelNum">
             <div grow flex flex-row>
               <span mt-1>&ensp;层数：</span>
-              <div >
+              <div>
                 <el-input
-                    @focus="checkWarnRemove('levelNum')"
-                    @blur="
+                  @focus="checkWarnRemove('levelNum')"
+                  @blur="
                     userCanteenEditInput.level_num =
-                        userCanteenEditInput.level_num === ''
+                      userCanteenEditInput.level_num === ''
                         ? 0
                         : userCanteenEditInput.level_num
-                    "
-                    @input="userInputLevelCheck(userCanteenEditInput)"
-                    v-model.number="userCanteenEditInput.level_num"
-                    :max="userCanteenEditInput.information.length"
+                  "
+                  @input="userInputLevelCheck(userCanteenEditInput)"
+                  v-model.number="userCanteenEditInput.level_num"
+                  :max="userCanteenEditInput.information.length"
                 />
               </div>
               <div grow></div>
@@ -346,7 +380,7 @@ initialInput()
             v-for="i in range(userCanteenEditInput.level_num)"
           >
             <div grow flex flex-row :id="'windows' + ('' + i)">
-                &ensp;
+              &ensp;
               <span
                 >&ensp;{{
                   convertToChinaNum(
@@ -388,7 +422,8 @@ initialInput()
                   flex
                   flex-row
                   :id="'windows' + ('' + i) + ('' + j * 2 + 1)"
-                >&ensp;
+                >
+                  &ensp;
                   <span
                     >&ensp;{{ j * 2 + 1 }}号窗口名称：<el-input
                       maxlength="10"
@@ -438,8 +473,18 @@ initialInput()
             <div flex-row w="full">
               <div grow></div>
               <div grow style="margin: 2%">
-                <el-button @click="userPrimaryCanteenEdit">修改</el-button>
-                <el-button @click="userCloseCanteenEditWindow">返回</el-button>
+                <el-button
+                  bg-yellow-5
+                  style="color: white; position: relative; left: 1rem; bottom: 1rem;"
+                  @click="userPrimaryCanteenEdit"
+                  >修改</el-button
+                >
+                <el-button
+                  bg-yellow-5
+                  style="color: white; position: relative; left: 1rem; bottom: 1rem;"
+                  @click="userCloseCanteenEditWindow"
+                  >返回</el-button
+                >
               </div>
               <div grow></div>
             </div>

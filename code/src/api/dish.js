@@ -98,6 +98,9 @@ export const deleteDish = async (item) => {
                         cancelButtonText: "取消",
                         type: "warning",
                     })
+                    .catch(i =>{
+                        console.log(i)
+                    })
                 })
                 .catch(async (err) => {
                     loading.close()
@@ -105,6 +108,9 @@ export const deleteDish = async (item) => {
                         confirmButtonText: "确定",
                         cancelButtonText: "取消",
                         type: "warning",
+                    })
+                    .catch(i =>{
+                        console.log(i)
                     })
                     console.error(err)
                 })

@@ -1,0 +1,27 @@
+.el-dialog .el-dialog__header {
+    padding: 0;
+    margin: 0;
+  }
+
+.el-dialog .el-dialog__body {
+    padding: 0;
+    margin: 0;
+  }
+
+  .el-dialog .el-container {
+    margin: 0;
+  }
+
+  
+.el-dialog .el-main{
+  padding: 0;
+  background-color: white;
+  margin: 0;
+}
+ 
+
+ .el-dialog .is-align-center {
+  width: 60%;
+  max-height: 80%;
+  min-height: 80%;
+} 

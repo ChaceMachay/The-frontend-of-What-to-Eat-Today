@@ -19,6 +19,7 @@ const userCloseCanteenShowWindow = () => {
       v-model="showCanteenWindowStatus"
       :show-close="false"
       align-center
+      append-to-body
     >
       <template #header >
         <div flex items-center h="full" bg-yellow-5>
@@ -99,7 +100,7 @@ const userCloseCanteenShowWindow = () => {
             <div flex-row w="full">
               <div grow></div>
               <div grow>
-                <el-button @click="userCloseCanteenShowWindow">返回</el-button>
+                <el-button @click="userCloseCanteenShowWindow" bg-yellow-5 style="color: white; position: relative; left: 2rem;">返回</el-button>
                 <p>&emsp;</p>
               </div>
               <div grow></div>

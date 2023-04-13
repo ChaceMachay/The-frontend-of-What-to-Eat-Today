@@ -21,7 +21,7 @@ export const initialCanteenManangeInformation = async () => {
         })
         .catch(async (err) => {
             loading.close()
-            ElMessageBox.confirm('获取餐厅信息失败！', '初始化失败', {
+            await ElMessageBox.confirm('获取餐厅信息失败！', '初始化失败', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -102,6 +102,9 @@ export const deleteCanteen = async (item) => {
                         cancelButtonText: "取消",
                         type: "warning",
                     })
+                    .catch(i =>{
+                        console.log(i)
+                    })
                 })
                 .catch(async (err) => {
                     loading.close()
@@ -109,6 +112,9 @@ export const deleteCanteen = async (item) => {
                         confirmButtonText: "确定",
                         cancelButtonText: "取消",
                         type: "warning",
+                    })
+                    .catch(i =>{
+                        console.log(i)
                     })
                     console.error(err)
                 })

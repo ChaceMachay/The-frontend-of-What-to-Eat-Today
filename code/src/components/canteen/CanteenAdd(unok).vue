@@ -225,6 +225,7 @@ initialInput()
       :show-close="false"
       align-center
       :close-on-click-modal="false"
+      append-to-body
     >
       <template #header>
         <div flex items-center h="full" bg-yellow-5>
