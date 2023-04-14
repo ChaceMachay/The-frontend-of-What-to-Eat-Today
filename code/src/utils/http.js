@@ -1,45 +1,29 @@
 import axios from "axios"
 
-import { baseUrl } from "../status/data"
-
-import { getUserLoginInformation } from "../api/storage"
-import { useRouter } from "vue-router"
-
-const user = getUserLoginInformation()
-const router = useRouter()
-
 
 export const http = axios.create(
     {
-        baseURL: baseUrl
+        baseURL: 'https://www.hao123.com'
     }
 )
 
 
 http.interceptors.request.use(req => {
-    const token = user.value.accessToken
+    const token = localStorage.getItem('accessToken');
     if (token) {
-        req.headers.set('Authorization', `Bearer ${token}`)
+        req.headers.set('Authorization', `Bearer ${token}`);
     }
-    return req
-})
+    return req;
+});
 
 http.interceptors.response.use(
     res => res,
     err => {
-        if (!user.value.userLoginStatus){
-            return Promise.reject(err)
+        if (err.response.status === 401) {
+            alert('登录失效，请重新登录');
+            //router.push('/login');
         }
-        else if (err.response.status === 404 || err.response.status === 410) {
-            return err
-        }
-        else if (err.response.status === 401) {
-            alert('登录失效，请重新登录')
-            user.value.userLoginStatus = 0
-            router.push('/')
-
-        }
-        return Promise.reject(err)
+        return Promise.reject(err);
     }
-)
+);
 
