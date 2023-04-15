@@ -93,12 +93,6 @@ canteenIndex.value = canteenIndexSrc;
 levelIndex.value = levelIndexSrc;
 
 const levelList = computed(() => {
-  if (
-    canteenIndex.value !==
-    userDishEditInput.value.windows_id.slice(1, 2) * 1
-  ) {
-    levelIndex.value = 0;
-  }
   let i = -1;
   return windowsList.value[canteenIndex.value].levels_information.map((a) => {
     i++;
@@ -120,8 +114,17 @@ const windowList = computed(() => {
 });
 
 watch(windowList, (newVal) => {
-  userDishEditInput.value.windows_id = newVal[0].values;
-});
+  userDishEditInput.value.windows_id = newVal[0].value;
+})
+watch(userDishEditInput.value.windows_id, (newVal) => {
+  if (newVal.slice(1,2)*1 !== canteenIndex.value) {
+    levelIndex.value = 0;
+  }
+  else if(newVal.slice(1,2)*1 === canteenIndex.value){
+    console.log(newVal.slice(1,2)*1);
+  }
+})
+
 
 const userPrimaryDishEdit = () => {
   ElMessageBox.confirm("是否确认修改菜品信息？", "修改确认", {

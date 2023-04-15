@@ -89,6 +89,15 @@ const windowList = computed(() => {
 watch(windowList, (newVal) => {
   userDishAddInput.value.windows_id = newVal[0].value;
 });
+watch(userDishAddInput.value.windows_id, (newVal) => {
+  if (newVal.slice(1,2)*1 !== canteenIndex.value) {
+    levelIndex.value = 0;
+  }
+  else if(newVal.slice(1,2)*1 === canteenIndex.value){
+    console.log(newVal.slice(1,2)*1);
+  }
+})
+
 
 const finalSet = () => {
   userDishAddInput.value.price *= 1;
