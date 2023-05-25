@@ -51,23 +51,25 @@ userDishAddInput.value.windows_id =
 let canteenIndexSrc = windowsList.value.findIndex(
   (a) => a.canteen_id === userDishAddInput.value.windows_id.slice(0, 2)
 );
-let levelIndexSrc = windowsList.value[
-  canteenIndexSrc
-].levels_information.findIndex((a) => a.level === userDishAddInput.value.level);
+let levelIndexSrc = 0
+userDishAddInput.value.level = windowsList.value[0].levels_information[0].level
 canteenIndex.value = canteenIndexSrc;
 levelIndex.value = levelIndexSrc;
 
 const levelList = computed(() => {
-  let i = -1;
+  let i = 0;
   return windowsList.value[canteenIndex.value].levels_information.map((a) => {
-    i++;
     return {
-      value: i,
+      value: i++,
       label: convertToChinaNum(a.level) + "层",
     };
   });
 });
 const windowList = computed(() => {
+  console.log(
+    levelIndex.value,
+    windowsList.value[canteenIndex.value].levels_information[levelIndex.value]
+  );
   return windowsList.value[canteenIndex.value].levels_information[
     levelIndex.value
   ].windows_information.map((a) => {
@@ -82,14 +84,12 @@ watch(windowList, (newVal) => {
   userDishAddInput.value.windows_id = newVal[0].value;
 });
 watch(userDishAddInput.value.windows_id, (newVal) => {
-  if (newVal.slice(1,2)*1 !== canteenIndex.value) {
+  if (newVal.slice(1, 2) * 1 !== canteenIndex.value) {
     levelIndex.value = 0;
+  } else if (newVal.slice(1, 2) * 1 === canteenIndex.value) {
+    console.log(newVal.slice(1, 2) * 1);
   }
-  else if(newVal.slice(1,2)*1 === canteenIndex.value){
-    console.log(newVal.slice(1,2)*1);
-  }
-})
-
+});
 
 const finalSet = () => {
   userDishAddInput.value.price *= 1;
@@ -258,7 +258,7 @@ const userInputPriceCheck = () => {
         </div>
       </template>
       <el-container>
-        <el-main style="overflow-x: hidden;">
+        <el-main style="overflow-x: hidden">
           <div m-5 flex flex-row style="width: 100%">
             <div grow id="nameJS">
               <span>名称：</span
@@ -288,7 +288,7 @@ const userInputPriceCheck = () => {
           <div m-5 flex style="width: 100%">
             <div grow>
               <span>餐厅：</span>
-              <el-select v-model="canteenIndex" style="width: 10rem;">
+              <el-select v-model="canteenIndex" style="width: 10rem">
                 <el-option
                   v-for="item in canteenList"
                   :key="item.value"
@@ -299,7 +299,7 @@ const userInputPriceCheck = () => {
             </div>
             <div grow>
               <span>楼层：</span>
-              <el-select v-model="levelIndex" style="width: 10rem;">
+              <el-select v-model="levelIndex" style="width: 10rem">
                 <el-option
                   v-for="item in levelList"
                   :key="item.value"
@@ -310,7 +310,10 @@ const userInputPriceCheck = () => {
             </div>
             <div grow>
               <span>窗口号：</span>
-              <el-select v-model="userDishAddInput.windows_id" style="width: 10rem;">
+              <el-select
+                v-model="userDishAddInput.windows_id"
+                style="width: 10rem"
+              >
                 <el-option
                   v-for="item in windowList"
                   :key="item.value"
@@ -377,13 +380,23 @@ const userInputPriceCheck = () => {
               <div grow>
                 <el-button
                   bg-yellow-5
-                  style="color: white; position: relative; left: 2rem; bottom: 0.5rem;"
+                  style="
+                    color: white;
+                    position: relative;
+                    left: 2rem;
+                    bottom: 0.5rem;
+                  "
                   @click="userPrimaryDishAdd"
                   >添加</el-button
                 >
                 <el-button
                   bg-yellow-5
-                  style="color: white; position: relative; left: 2rem; bottom: 0.5rem;"
+                  style="
+                    color: white;
+                    position: relative;
+                    left: 2rem;
+                    bottom: 0.5rem;
+                  "
                   @click="userCloseDishAddWindow"
                   >返回</el-button
                 >
