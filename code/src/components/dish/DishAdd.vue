@@ -12,8 +12,6 @@ import { convertToChinaNum } from "../../api/etc.js";
 import DishUpload from "./DishUpload.vue";
 import { addDish, initialdishManangeInformation } from "../../api/dish";
 
-const url = "https://0nlinetek-eat.azurewebsites.net";
-
 const labelList = ref([
   { labelName: "汤类", labelClass: "green" },
   { labelName: "辣", labelClass: "red" },
@@ -26,7 +24,7 @@ const userDishAddInput = ref({
   windows_id: "110101",
   level: 1,
   price: "0",
-  picture: "",
+  picture: "/static/1683350245.2072906.jpg",
   sparePicture: "",
   date: {
     morning: false,
@@ -60,12 +58,6 @@ canteenIndex.value = canteenIndexSrc;
 levelIndex.value = levelIndexSrc;
 
 const levelList = computed(() => {
-  if (
-    canteenIndex.value !==
-    userDishAddInput.value.windows_id.slice(1, 2) * 1
-  ) {
-    levelIndex.value = 0;
-  }
   let i = -1;
   return windowsList.value[canteenIndex.value].levels_information.map((a) => {
     i++;

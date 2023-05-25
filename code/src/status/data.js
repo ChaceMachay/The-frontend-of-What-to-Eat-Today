@@ -28,7 +28,7 @@ export const windowStatus = computed(() => {
 })
 export const windowsMessage = ref({})
 
-export const baseUrl = 'https://0nlinetek-eat.azurewebsites.net'
+export const baseUrl = 'https://yuming.propranolol.cn'
 
 export const checkPriceByBlur = /^((([1-9]([0-9]{0,300}))|(0))(\.[0-9]{1,2})?)$|^(0{1})$/g
 export const checkPriceByInput = /^((([1-9]([0-9]{0,300}))|(0))(\.[0-9]{0,2})?)$|^(0{0,1})$/g

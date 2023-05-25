@@ -121,7 +121,7 @@ const userPrimaryCanteenEdit = async () => {
     type: "warning",
   })
     .then(async () => {
-      if (!checkStatus.value) {
+      if (!checkStatus.value||!userCanteenEditInput.value.level_num) {
         await ElMessageBox.confirm("必填项不能为空！", "添加失败", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
