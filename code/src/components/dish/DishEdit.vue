@@ -27,7 +27,7 @@ const userDishEditInput = ref({
   muslim: false,
   windows_id: "010101",
   price: "0",
-  picture: "/static/1681088941.490633.jpg",
+  picture: "/static/1683350245.2072906.jpg",
   sparePicture: "",
   date: {
     morning: false,
