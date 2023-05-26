@@ -108,7 +108,7 @@ const windowList = computed(() => {
   ].windows_information.map((a) => {
     return {
       value: a.window_id,
-      label: a.window + "号窗口",
+      label: a.window_name,
     };
   });
 });

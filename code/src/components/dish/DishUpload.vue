@@ -18,7 +18,6 @@ const picture = computed(() => {
 
 const pictureUpload = async (a) => {
   let file = null
-  console.log(a.file)
   let pictureSize = a.file.size / 1048576; //MB
   if (pictureSize > 2) {
     await ElMessageBox.confirm("图片大小过大，不得超过2M。", "无法上传", {
@@ -55,7 +54,6 @@ const pictureUpload = async (a) => {
     }, 10);
   })
   let res = ""
-  console.log(file)
   await uploadPicture(file)
     .then((k) => {
       res = k;
